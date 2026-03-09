@@ -47,11 +47,17 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
         setTemplate(data);
 
         // Initialize with defaults from template
-        const designConfig = data.designConfig as any;
+        let designConfig = {};
+        try {
+          designConfig = JSON.parse(data.designConfig as string);
+        } catch (e) {
+          console.error('Failed to parse designConfig:', e);
+        }
+
         const defaultText: Record<string, string> = {};
 
-        if (designConfig.elements && Array.isArray(designConfig.elements)) {
-          designConfig.elements.forEach((element: any) => {
+        if ((designConfig as any).elements && Array.isArray((designConfig as any).elements)) {
+          (designConfig as any).elements.forEach((element: any) => {
             if (element.editable && element.id) {
               defaultText[element.id] = element.defaultText || '';
             }

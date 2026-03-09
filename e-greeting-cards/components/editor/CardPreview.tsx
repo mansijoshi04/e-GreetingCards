@@ -13,17 +13,25 @@ export default function CardPreview({
   customText,
   customStyling,
 }: CardPreviewProps) {
-  const designConfig = template.designConfig as any;
-  const bgColors = customStyling.backgroundValue || designConfig.layout?.backgroundValue || [];
+  // Parse designConfig from JSON string
+  let designConfig = {};
+  try {
+    designConfig = JSON.parse(template.designConfig as string);
+  } catch (e) {
+    console.error('Failed to parse designConfig:', e);
+  }
+
+  const designConfigTyped = designConfig as any;
+  const bgColors = customStyling.backgroundValue || designConfigTyped.layout?.backgroundValue || [];
   const bgGradient =
     bgColors.length === 2
       ? `linear-gradient(135deg, ${bgColors[0]}, ${bgColors[1]})`
       : bgColors[0] || '#fdfcfb';
 
   // Get colors and styles from template design config
-  const headlineElement = designConfig.elements?.[0];
-  const bodyElement = designConfig.elements?.[1];
-  const signatureElement = designConfig.elements?.[2];
+  const headlineElement = designConfigTyped.elements?.[0];
+  const bodyElement = designConfigTyped.elements?.[1];
+  const signatureElement = designConfigTyped.elements?.[2];
 
   const headlineColor = headlineElement?.style?.color || '#FF6B9D';
   const bodyColor = bodyElement?.style?.color || '#333333';
