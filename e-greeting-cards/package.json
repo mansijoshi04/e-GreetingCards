@@ -1,0 +1,54 @@
+{
+  "name": "e-greeting-cards",
+  "version": "0.1.0",
+  "description": "Interactive web-based greeting card platform with animations and email delivery",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
+  },
+  "keywords": [
+    "greeting cards",
+    "animations",
+    "email"
+  ],
+  "author": "",
+  "license": "MIT",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "5.21.0",
+    "@sendgrid/mail": "^8.1.6",
+    "@stripe/react-stripe-js": "^5.6.1",
+    "@stripe/stripe-js": "^8.9.0",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vercel/analytics": "^1.6.1",
+    "autoprefixer": "^10.4.27",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.35.1",
+    "ioredis": "^5.10.0",
+    "next": "^16.1.6",
+    "postcss": "^8.5.8",
+    "prisma": "5.21.0",
+    "react": "^19.2.4",
+    "react-confetti": "^6.4.0",
+    "react-dom": "^19.2.4",
+    "react-use": "^17.6.0",
+    "stripe": "^20.4.1",
+    "tailwindcss": "3.4.19",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "critters": "^0.0.23",
+    "ts-node": "^10.9.2"
+  }
+}

@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant_Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-[#fdfcfb] text-stone-900;
+  }
+
+  h1 {
+    @apply font-serif font-bold;
+  }
+
+  h2 {
+    @apply font-serif font-semibold;
+  }
+
+  h3 {
+    @apply font-serif font-semibold;
+  }
+
+  p {
+    @apply font-body;
+  }
+}
+
+@layer components {
+  .serif {
+    @apply font-serif;
+  }
+
+  .btn-primary {
+    @apply inline-block px-7 py-3 bg-stone-900 text-white rounded-2xl font-semibold hover:bg-stone-800 transition-colors duration-200;
+  }
+
+  .btn-primary-rose {
+    @apply inline-block px-7 py-3 bg-rose-500 text-white rounded-2xl font-semibold hover:bg-rose-600 transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply inline-block px-7 py-3 border-2 border-stone-900 text-stone-900 rounded-2xl font-semibold hover:bg-stone-50 transition-colors duration-200;
+  }
+
+  .btn-nav {
+    @apply inline-block px-6 py-2 bg-stone-900 text-white rounded-full font-medium hover:bg-stone-800 transition-colors duration-200 text-sm;
+  }
+
+  .btn-disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .card-container {
+    @apply max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-lg;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-br;
+  }
+}
+
+/* Loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    #f0f0f0 8%,
+    #f9f9f9 18%,
+    #f0f0f0 33%
+  );
+  background-size: 800px 104px;
+}

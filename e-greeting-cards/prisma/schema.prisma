@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Card Templates (pre-designed layouts)
+model Template {
+  id            String   @id @default(uuid())
+  name          String
+  category      String // birthday, anniversary, graduation, thankYou, congratulations
+  tier          String // basic, premium
+  priceCents    Int      @map("price_cents")
+  thumbnailUrl  String   @map("thumbnail_url")
+  designConfig  String   @map("design_config") // Full design specification (JSON string)
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  cards         Card[]
+
+  @@map("templates")
+}
+
+// User-Created Cards
+model Card {
+  id               String    @id @default(uuid())
+  templateId       String    @map("template_id")
+
+  // Sender Information
+  senderEmail      String?   @map("sender_email")
+  senderName       String    @map("sender_name")
+
+  // Card Content
+  customText       String    @map("custom_text") // {headline, body, signature} - JSON string
+  customStyling    String?   @map("custom_styling") // {colors, fonts} overrides - JSON string
+
+  // Link Management
+  linkToken        String    @unique @map("link_token")
+  expiresAt        DateTime  @map("expires_at")
+
+  // Payment
+  stripePaymentId  String?   @map("stripe_payment_id")
+  amountPaidCents  Int       @map("amount_paid_cents")
+  isPaid           Boolean   @default(false) @map("is_paid")
+
+  // Metadata
+  createdAt        DateTime  @default(now()) @map("created_at")
+  lastAccessedAt   DateTime? @map("last_accessed_at")
+
+  template         Template  @relation(fields: [templateId], references: [id])
+  recipients       Recipient[]
+  opens            CardOpen[]
+
+  @@index([linkToken])
+  @@index([expiresAt])
+  @@map("cards")
+}
+
+// Recipients (many-to-one with cards)
+model Recipient {
+  id              String    @id @default(uuid())
+  cardId          String    @map("card_id")
+  recipientEmail  String    @map("recipient_email")
+
+  // Tracking
+  emailSentAt     DateTime? @map("email_sent_at")
+  firstOpenedAt   DateTime? @map("first_opened_at") // NULL until opened
+  openCount       Int       @default(0) @map("open_count")
+  lastOpenedAt    DateTime? @map("last_opened_at")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  card            Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  opens           CardOpen[]
+
+  @@index([cardId])
+  @@map("recipients")
+}
+
+// Analytics (detailed tracking)
+model CardOpen {
+  id            String    @id @default(uuid())
+  cardId        String    @map("card_id")
+  recipientId   String?   @map("recipient_id")
+
+  // Context
+  openedAt      DateTime  @default(now()) @map("opened_at")
+  userAgent     String?
+  ipAddress     String?
+  referrer      String?
+  deviceType    String?   @map("device_type") // mobile, desktop, tablet
+
+  card          Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  recipient     Recipient? @relation(fields: [recipientId], references: [id])
+
+  @@index([cardId])
+  @@map("card_opens")
+}

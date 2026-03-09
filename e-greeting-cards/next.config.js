@@ -1,0 +1,61 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // React strict mode for development
+  reactStrictMode: true,
+
+  // Image optimization
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.s3.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cloudinary.com',
+      },
+    ],
+  },
+
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
+
+  // Optimize CSS
+  experimental: {
+    optimizeCss: true,
+  },
+
+  // Compression
+  compress: true,
+};
+
+module.exports = nextConfig;
