@@ -15,20 +15,30 @@ export default function TemplateCard({ template }: TemplateCardProps) {
   const price = template.tier === 'premium' ? '$5' : '$3';
   const priceColor = template.tier === 'premium' ? 'text-rose-500' : 'text-stone-900';
 
-  // Get design config to extract preview data
-  const designConfig = template.designConfig as any;
-  const backgroundValue = designConfig?.layout?.backgroundValue;
+  // Parse design config from JSON string
+  let designConfig = {};
+  try {
+    designConfig = JSON.parse(template.designConfig as string);
+  } catch (e) {
+    console.error('Failed to parse designConfig:', e);
+  }
+
+  const designConfigTyped = designConfig as any;
+  const backgroundValue = designConfigTyped?.layout?.backgroundValue;
   const bgGradient = Array.isArray(backgroundValue)
     ? `linear-gradient(135deg, ${backgroundValue[0]}, ${backgroundValue[1] || backgroundValue[0]})`
     : backgroundValue || '#fdfcfb';
 
   // Get headline color and text from first element
-  const headlineElement = designConfig?.elements?.[0];
+  const headlineElement = designConfigTyped?.elements?.[0];
   const headlineColor = headlineElement?.style?.color || '#FF6B9D';
   const headlineText = headlineElement?.defaultText || 'Happy Birthday!';
 
+  const handleCardClick = () => {
+    router.push(`/create/${template.id}`);
+  };
+
   const handleEditClick = (e: React.MouseEvent) => {
-    e.preventDefault();
     e.stopPropagation();
     router.push(`/create/${template.id}`);
   };
@@ -38,6 +48,7 @@ export default function TemplateCard({ template }: TemplateCardProps) {
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       className="rounded-[2rem] shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer h-full flex flex-col bg-white border border-stone-200 hover:border-stone-300"
+      onClick={handleCardClick}
     >
       {/* Template Image/Preview - Gradient background */}
       <div
