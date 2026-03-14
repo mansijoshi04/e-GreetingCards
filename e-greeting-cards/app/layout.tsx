@@ -15,7 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'E-Greeting Cards - Send Animated Celebration Cards',
+  metadataBase: new URL(process.env.BASE_URL || 'http://localhost:3000'),
+  title: 'Giflove - Send Animated Celebration Cards',
   description: 'Create and send beautiful animated greeting cards with scroll-to-open animations and confetti effects. Starting at just $3.',
   keywords: 'greeting cards, animated cards, birthday cards, anniversary cards, celebrations',
   openGraph: {

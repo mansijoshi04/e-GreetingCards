@@ -34,8 +34,9 @@ export default function CardPreview({
   const signatureElement = designConfigTyped.elements?.[2];
 
   const headlineColor = headlineElement?.style?.color || '#FF6B9D';
-  const bodyColor = bodyElement?.style?.color || '#333333';
-  const signatureColor = signatureElement?.style?.color || '#666666';
+  // customStyling.textColor (hex) overrides template default for body + signature
+  const bodyColor = customStyling.textColor || bodyElement?.style?.color || '#333333';
+  const signatureColor = customStyling.textColor || signatureElement?.style?.color || '#666666';
 
   // Get default text from template
   const headlineDefaultText = headlineElement?.defaultText || 'Happy Birthday!';

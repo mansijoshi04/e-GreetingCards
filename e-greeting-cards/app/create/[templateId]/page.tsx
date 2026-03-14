@@ -6,6 +6,7 @@ import { Template } from '@prisma/client';
 import { Loader2 } from 'lucide-react';
 import CustomizationPanel from '@/components/editor/CustomizationPanel';
 import PreviewPane from '@/components/editor/PreviewPane';
+import PreviewModal from '@/components/editor/PreviewModal';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -28,10 +29,11 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
   });
   const [customStyling, setCustomStyling] = useState<Record<string, any>>({
     fontSize: 20,
-    textColor: 'stone-900',
+    textColor: '#333333',
     backgroundTheme: 0,
   });
   const [saving, setSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   // Fetch template on mount
   useEffect(() => {
@@ -90,8 +92,11 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
       alert('Please fill in headline, message, and signature');
       return;
     }
+    // Open preview modal before proceeding
+    setShowPreview(true);
+  };
 
-    // Save to session storage
+  const handleConfirmPreview = () => {
     setSaving(true);
     setTimeout(() => {
       sessionStorage.setItem(
@@ -102,8 +107,6 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
           customStyling,
         })
       );
-
-      // Navigate to recipients page
       router.push('/recipients');
     }, 300);
   };
@@ -211,6 +214,22 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
           </motion.div>
         </div>
       </div>
+
+      {/* Animation Preview Modal */}
+      {template && (() => {
+        let designConfig: any = {};
+        try { designConfig = JSON.parse(template.designConfig as string); } catch {}
+        return (
+          <PreviewModal
+            isOpen={showPreview}
+            onClose={() => setShowPreview(false)}
+            onConfirm={handleConfirmPreview}
+            design={designConfig}
+            customText={customText}
+            customStyling={customStyling}
+          />
+        );
+      })()}
     </main>
   );
 }

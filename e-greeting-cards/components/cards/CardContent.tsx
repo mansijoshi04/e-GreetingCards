@@ -24,7 +24,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
     backgroundStyle.backgroundColor = layout.backgroundValue[0] || layout.backgroundValue;
   }
 
-  // User's text color override (stored as Tailwind name → map to hex)
+  // User's text color override — stored as hex (legacy Tailwind names also supported)
   const textColorMap: Record<string, string> = {
     'stone-900': '#1c1917',
     'rose-500': '#f43f5e',
@@ -153,7 +153,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
               fontSize: signature.style?.fontSize || '18px',
               fontFamily: signature.style?.fontFamily || 'Georgia, serif',
               fontWeight: signature.style?.fontWeight || '400',
-              color: signature.style?.color || '#777777',
+              color: bodyTextColor || signature.style?.color || '#777777',
               fontStyle: signature.style?.fontStyle || 'italic',
             }}
           >

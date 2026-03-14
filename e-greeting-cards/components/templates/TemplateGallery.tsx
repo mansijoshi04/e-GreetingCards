@@ -33,7 +33,8 @@ export default function TemplateGallery({ templates }: TemplateGalleryProps) {
   if (templates.length === 0) {
     return (
       <div className="text-center py-20">
-        <p className="text-stone-500 text-lg">No templates available.</p>
+        <p className="text-stone-500 text-lg mb-2">No templates match your filters.</p>
+        <p className="text-stone-400 text-sm">Try a different category or price tier.</p>
       </div>
     );
   }

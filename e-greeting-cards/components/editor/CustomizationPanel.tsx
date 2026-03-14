@@ -48,12 +48,8 @@ export default function CustomizationPanel({
     },
   };
 
-  const textColors = [
-    { name: 'Stone', value: 'stone-900', hex: '#78716c' },
-    { name: 'Rose', value: 'rose-500', hex: '#f43f5e' },
-    { name: 'Slate', value: 'slate-700', hex: '#334155' },
-    { name: 'Emerald', value: 'emerald-600', hex: '#059669' },
-  ];
+  const quickTextColors = ['#1c1917', '#f43f5e', '#334155', '#059669', '#7c3aed', '#d97706'];
+  const quickBgPresets = Object.entries(colors);
 
   const colors = colorThemes[template.category] || colorThemes['birthday'];
 
@@ -71,11 +67,18 @@ export default function CustomizationPanel({
     });
   };
 
-  const handleTextColorChange = (colorValue: string) => {
+  const handleTextColorChange = (hex: string) => {
     setCustomStyling({
       ...customStyling,
-      textColor: colorValue,
+      textColor: hex,
     });
+  };
+
+  const handleGradientColorChange = (index: 0 | 1, hex: string) => {
+    const current: string[] = customStyling.backgroundValue || Object.values(colors)[0];
+    const updated = [...current];
+    updated[index] = hex;
+    setCustomStyling({ ...customStyling, backgroundValue: updated });
   };
 
   const handleFontSizeChange = (size: number) => {
@@ -216,49 +219,85 @@ export default function CustomizationPanel({
         <label className="block text-xs uppercase tracking-widest text-stone-500 font-semibold mb-3">
           Message Color
         </label>
-        <div className="grid grid-cols-4 gap-3">
-          {textColors.map((color) => (
-            <button
-              key={color.value}
-              onClick={() => handleTextColorChange(color.value)}
-              className={`h-12 rounded-lg border-2 transition-all ${
-                customStyling.textColor === color.value
-                  ? 'border-rose-500 scale-110'
-                  : 'border-stone-200 hover:border-stone-300'
-              }`}
-              style={{ backgroundColor: color.hex }}
-              title={color.name}
-            />
-          ))}
+        <div className="flex items-center gap-3">
+          <input
+            type="color"
+            value={customStyling.textColor || '#333333'}
+            onChange={(e) => handleTextColorChange(e.target.value)}
+            className="w-10 h-10 rounded-lg border border-stone-200 cursor-pointer p-0.5 bg-white"
+            title="Pick any text color"
+          />
+          <div className="flex gap-2">
+            {quickTextColors.map((hex) => (
+              <button
+                key={hex}
+                onClick={() => handleTextColorChange(hex)}
+                className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                  customStyling.textColor === hex ? 'border-rose-500 scale-110' : 'border-stone-200'
+                }`}
+                style={{ backgroundColor: hex }}
+                title={hex}
+              />
+            ))}
+          </div>
         </div>
       </motion.div>
 
-      {/* Background Theme */}
+      {/* Background */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35 }}
       >
         <label className="block text-xs uppercase tracking-widest text-stone-500 font-semibold mb-3">
-          Background Theme
+          Background
         </label>
-        <div className="space-y-2 max-h-48 overflow-y-auto">
-          {Object.entries(colors).map(([name, colorSet]) => (
+
+        {/* Custom gradient pickers */}
+        <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={(customStyling.backgroundValue || Object.values(colors)[0])[0] || '#ffffff'}
+              onChange={(e) => handleGradientColorChange(0, e.target.value)}
+              className="w-10 h-10 rounded-lg border border-stone-200 cursor-pointer p-0.5 bg-white"
+              title="Gradient start color"
+            />
+            <span className="text-xs text-stone-400">→</span>
+            <input
+              type="color"
+              value={(customStyling.backgroundValue || Object.values(colors)[0])[1] || '#f5f5f5'}
+              onChange={(e) => handleGradientColorChange(1, e.target.value)}
+              className="w-10 h-10 rounded-lg border border-stone-200 cursor-pointer p-0.5 bg-white"
+              title="Gradient end color"
+            />
+          </div>
+          <div
+            className="flex-1 h-10 rounded-lg border border-stone-200"
+            style={{
+              background: `linear-gradient(135deg, ${(customStyling.backgroundValue || Object.values(colors)[0])[0]}, ${(customStyling.backgroundValue || Object.values(colors)[0])[1]})`,
+            }}
+          />
+        </div>
+
+        {/* Quick preset themes */}
+        <div className="space-y-1.5 max-h-36 overflow-y-auto">
+          {quickBgPresets.map(([name, colorSet]) => (
             <button
               key={name}
               onClick={() => handleColorChange(colorSet)}
-              className={`w-full p-3 rounded-xl border-2 transition-all flex items-center justify-between ${
+              className={`w-full px-3 py-2 rounded-xl border-2 transition-all flex items-center justify-between ${
                 JSON.stringify(customStyling.backgroundValue) === JSON.stringify(colorSet)
                   ? 'border-rose-500 bg-rose-50'
                   : 'border-stone-200 hover:border-stone-300'
               }`}
             >
-              <span className="text-sm font-medium text-stone-700">{name}</span>
-              <div className="flex gap-2">
+              <span className="text-xs font-medium text-stone-700">{name}</span>
+              <div className="flex gap-1.5">
                 {colorSet.map((color) => (
                   <div
                     key={color}
-                    className="w-5 h-5 rounded-full border border-stone-300"
+                    className="w-4 h-4 rounded-full border border-stone-300"
                     style={{ backgroundColor: color }}
                   />
                 ))}

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Heart } from 'lucide-react';
-
+import Footer from '@/components/layout/Footer';
 import TemplateGallery from '@/components/templates/TemplateGallery';
 import { getAllTemplates } from '@/lib/services/templateService';
 
@@ -10,19 +10,30 @@ export const metadata: Metadata = {
   description: 'Choose from beautiful templates and create your personalized greeting card.',
 };
 
+const CATEGORIES = [
+  { value: 'all', label: 'All Occasions' },
+  { value: 'birthday', label: 'Birthday' },
+  { value: 'anniversary', label: 'Anniversary' },
+  { value: 'graduation', label: 'Graduation' },
+  { value: 'thankYou', label: 'Thank You' },
+];
+
 export default async function CreatePage({
   searchParams,
 }: {
-  searchParams: Promise<{ tier?: string }>;
+  searchParams: Promise<{ tier?: string; category?: string }>;
 }) {
   const params = await searchParams;
   const tier = params.tier || 'all';
+  const category = params.category || 'all';
   const templates = await getAllTemplates();
 
-  // Filter by tier if specified
-  const filteredTemplates = tier === 'all'
-    ? templates
-    : templates.filter(t => t.tier === tier);
+  // Filter by tier and category
+  const filteredTemplates = templates.filter(t => {
+    const tierMatch = tier === 'all' || t.tier === tier;
+    const categoryMatch = category === 'all' || t.category === category;
+    return tierMatch && categoryMatch;
+  });
 
   return (
     <main className="min-h-screen bg-[#fdfcfb]">
@@ -55,39 +66,60 @@ export default async function CreatePage({
         </div>
       </section>
 
-      {/* Tier Filter Pills */}
-      <section className="py-8 px-6 border-b border-stone-100 bg-white">
-        <div className="max-w-6xl mx-auto flex gap-3 flex-wrap">
-          <Link
-            href="/create?tier=all"
-            className={`px-6 py-2 rounded-full font-medium transition-colors ${
-              tier === 'all'
-                ? 'bg-stone-900 text-white'
-                : 'bg-stone-100 text-stone-900 hover:bg-stone-200'
-            }`}
-          >
-            All Templates
-          </Link>
-          <Link
-            href="/create?tier=basic"
-            className={`px-6 py-2 rounded-full font-medium transition-colors ${
-              tier === 'basic'
-                ? 'bg-stone-900 text-white'
-                : 'bg-stone-100 text-stone-900 hover:bg-stone-200'
-            }`}
-          >
-            Basic ($3)
-          </Link>
-          <Link
-            href="/create?tier=premium"
-            className={`px-6 py-2 rounded-full font-medium transition-colors ${
-              tier === 'premium'
-                ? 'bg-rose-500 text-white'
-                : 'bg-rose-50 text-rose-600 hover:bg-rose-100'
-            }`}
-          >
-            Premium ($5)
-          </Link>
+      {/* Filters */}
+      <section className="py-6 px-6 border-b border-stone-100 bg-white">
+        <div className="max-w-6xl mx-auto space-y-4">
+          {/* Category Pills */}
+          <div className="flex gap-2 flex-wrap">
+            {CATEGORIES.map(({ value, label }) => (
+              <Link
+                key={value}
+                href={`/create?tier=${tier}&category=${value}`}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+                  category === value
+                    ? 'bg-stone-900 text-white'
+                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Tier Pills */}
+          <div className="flex gap-2 flex-wrap items-center">
+            <span className="text-xs uppercase tracking-widest text-stone-400 font-semibold mr-1">Price:</span>
+            <Link
+              href={`/create?tier=all&category=${category}`}
+              className={`px-5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                tier === 'all'
+                  ? 'bg-stone-900 text-white'
+                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+              }`}
+            >
+              All
+            </Link>
+            <Link
+              href={`/create?tier=basic&category=${category}`}
+              className={`px-5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                tier === 'basic'
+                  ? 'bg-stone-900 text-white'
+                  : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+              }`}
+            >
+              Basic — $3
+            </Link>
+            <Link
+              href={`/create?tier=premium&category=${category}`}
+              className={`px-5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                tier === 'premium'
+                  ? 'bg-rose-500 text-white'
+                  : 'bg-rose-50 text-rose-600 hover:bg-rose-100'
+              }`}
+            >
+              Premium — $5
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -98,41 +130,7 @@ export default async function CreatePage({
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-stone-900 text-white py-20 px-6">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
-          <div className="col-span-2">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white">
-                <Heart size={14} fill="white" />
-              </div>
-              <span className="font-serif text-2xl font-bold tracking-tight">Giflove</span>
-            </div>
-            <p className="text-white/40 max-w-sm">
-              Elevating digital connections through artistic design and personal touch.
-            </p>
-          </div>
-          <div>
-            <h5 className="text-xs font-bold uppercase tracking-widest text-white/20 mb-6">Platform</h5>
-            <ul className="space-y-4 text-sm text-white/60">
-              <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-              <li><Link href="/create" className="hover:text-white transition-colors">Browse Cards</Link></li>
-              <li><Link href="/faq" className="hover:text-white transition-colors">How it Works</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h5 className="text-xs font-bold uppercase tracking-widest text-white/20 mb-6">Company</h5>
-            <ul className="space-y-4 text-sm text-white/60">
-              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 text-center text-white/20 text-xs">
-          © 2024 Giflove. All rights reserved.
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }
