@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -14,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-greeting_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-greeting_user} -d ${POSTGRES_DB:-greeting_cards}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -53,17 +51,23 @@ services:
       REDIS_URL: redis://redis:6379
 
       # App
-      BASE_URL: http://localhost:3000
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
       NODE_ENV: development
 
-      # Stripe (add your test keys)
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
-      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      # Paddle
+      PADDLE_API_KEY: ${PADDLE_API_KEY}
+      PADDLE_WEBHOOK_SECRET: ${PADDLE_WEBHOOK_SECRET}
+      PADDLE_ENVIRONMENT: ${PADDLE_ENVIRONMENT:-sandbox}
+      PADDLE_BASIC_PRICE_ID: ${PADDLE_BASIC_PRICE_ID}
+      PADDLE_PREMIUM_PRICE_ID: ${PADDLE_PREMIUM_PRICE_ID}
+      NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: ${NEXT_PUBLIC_PADDLE_CLIENT_TOKEN}
 
-      # SendGrid (add your API key)
-      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
-      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL:-cards@localhost}
+      # Email
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      EMAIL_FROM: ${EMAIL_FROM:-cards@yourapp.com}
+      MAILGUN_API_KEY: ${MAILGUN_API_KEY:-}
+      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN:-}
+      MAILGUN_REGION: ${MAILGUN_REGION:-us}
 
     depends_on:
       postgres:
@@ -80,7 +84,7 @@ services:
       - greeting-network
 
     command: >
-      sh -c "npx prisma migrate dev --name init || true &&
+      sh -c "npx prisma db push || true &&
              npx prisma db seed || true &&
              npm run dev"
 

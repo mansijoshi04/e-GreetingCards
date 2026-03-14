@@ -9,6 +9,9 @@ const config: Config = {
     extend: {
       fontFamily: {
         serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+        headline: ['Cormorant Garamond', 'Playfair Display', 'Montserrat', 'serif'],
+        body: ['Inter', 'Open Sans', 'Lato', 'sans-serif'],
+        signature: ['Dancing Script', 'Pacifico', 'Great Vibes', 'cursive'],
       },
       fontWeight: {
         light: '300',
@@ -54,12 +57,6 @@ const config: Config = {
           accent: '#9370DB',
           text: '#2F4F4F',
         },
-      },
-      fontFamily: {
-        serif: ['Cormorant Garamond', 'serif'],
-        headline: ['Cormorant Garamond', 'Playfair Display', 'Montserrat', 'serif'],
-        body: ['Inter', 'Open Sans', 'Lato', 'sans-serif'],
-        signature: ['Dancing Script', 'Pacifico', 'Great Vibes', 'cursive'],
       },
       borderRadius: {
         card: '2rem',

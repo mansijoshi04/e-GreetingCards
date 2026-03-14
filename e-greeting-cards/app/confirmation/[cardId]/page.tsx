@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 interface ConfirmationPageProps {
-  params: {
+  params: Promise<{
     cardId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     session_id?: string;
-  };
+  }>;
 }
 
 interface CardData {
@@ -23,8 +23,9 @@ interface CardData {
 
 export default function ConfirmationPage({
   params,
-  searchParams,
+  searchParams: _searchParams,
 }: ConfirmationPageProps) {
+  const { cardId } = use(params);
   const [cardData, setCardData] = useState<CardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export default function ConfirmationPage({
   useEffect(() => {
     const fetchCardData = async () => {
       try {
-        const response = await fetch(`/api/cards/${params.cardId}`);
+        const response = await fetch(`/api/cards/${cardId}`);
 
         if (!response.ok) {
           const data = await response.json();
@@ -52,7 +53,7 @@ export default function ConfirmationPage({
     };
 
     fetchCardData();
-  }, [params.cardId]);
+  }, [cardId]);
 
   const baseUrl =
     typeof window !== 'undefined'

@@ -5,7 +5,10 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database with templates...');
 
-  // Delete existing templates
+  // Delete in dependency order (cards reference templates)
+  await prisma.cardOpen.deleteMany();
+  await prisma.recipient.deleteMany();
+  await prisma.card.deleteMany();
   await prisma.template.deleteMany();
 
   // 1. Balloon Party - Birthday Basic

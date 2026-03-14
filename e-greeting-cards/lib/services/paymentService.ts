@@ -1,7 +1,8 @@
-import Stripe from 'stripe';
+import { Paddle, Environment } from '@paddle/paddle-node-sdk';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-04-10',
+// Initialize Paddle SDK
+const paddle = new Paddle(process.env.PADDLE_API_KEY || '', {
+  environment: process.env.PADDLE_ENVIRONMENT === 'production' ? Environment.production : Environment.sandbox,
 });
 
 export interface CreateCheckoutSessionParams {
@@ -14,11 +15,11 @@ export interface CreateCheckoutSessionParams {
 }
 
 /**
- * Create a Stripe checkout session for card payment
+ * Create a Paddle transaction checkout session
  */
 export async function createCheckoutSession(
   params: CreateCheckoutSessionParams
-): Promise<string> {
+): Promise<{ checkoutUrl: string; transactionId: string }> {
   const {
     amountCents,
     cardId,
@@ -29,87 +30,114 @@ export async function createCheckoutSession(
   } = params;
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
+    // Select price ID based on amount
+    const priceId =
+      amountCents === 300
+        ? process.env.PADDLE_BASIC_PRICE_ID!
+        : process.env.PADDLE_PREMIUM_PRICE_ID!;
+
+    if (!priceId) {
+      throw new Error(
+        `Price ID not configured for amount: ${amountCents}. Check PADDLE_BASIC_PRICE_ID and PADDLE_PREMIUM_PRICE_ID`
+      );
+    }
+
+    // Create transaction with Paddle
+    const transaction = await paddle.transactions.create({
+      items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `E-Greeting Card: ${templateName}`,
-              description: 'Beautiful animated greeting card with email delivery',
-            },
-            unit_amount: amountCents,
-          },
+          priceId,
           quantity: 1,
         },
       ],
-      mode: 'payment',
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata: {
+      customData: {
         cardId,
+        templateName,
         ...metadata,
+      },
+      checkout: {
+        url: successUrl,
       },
     });
 
-    if (!session.url) {
-      throw new Error('Failed to create checkout session URL');
+    if (!transaction.checkout?.url) {
+      throw new Error('Failed to get checkout URL from Paddle transaction');
     }
 
-    return session.url;
+    return {
+      checkoutUrl: transaction.checkout.url,
+      transactionId: transaction.id,
+    };
   } catch (error) {
-    console.error('Error creating checkout session:', error);
+    console.error('Error creating Paddle checkout session:', error);
     throw error;
   }
 }
 
 /**
- * Construct a webhook event from raw body and signature
- * Used to verify webhook authenticity
+ * Verify a Paddle webhook signature
+ * Returns true if signature is valid, false otherwise
  */
-export function constructWebhookEvent(
+export function verifyWebhookSignature(
   body: string,
   signature: string
-): Stripe.Event {
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+): boolean {
+  const secret = process.env.PADDLE_WEBHOOK_SECRET || '';
 
   try {
-    return stripe.webhooks.constructEvent(body, signature, endpointSecret);
+    // Paddle webhook verification
+    const verified = paddle.webhooks.unmarshal(body, secret, signature);
+    return !!verified;
   } catch (error) {
     console.error('Webhook signature verification failed:', error);
+    return false;
+  }
+}
+
+/**
+ * Parse and return webhook event data
+ */
+export function parseWebhookEvent(
+  body: string,
+  signature: string
+): any {
+  const secret = process.env.PADDLE_WEBHOOK_SECRET || '';
+
+  try {
+    return paddle.webhooks.unmarshal(body, secret, signature);
+  } catch (error) {
+    console.error('Failed to parse webhook event:', error);
     throw error;
   }
 }
 
 /**
- * Get payment intent details (for testing/verification)
+ * Get transaction details (for testing/verification)
  */
-export async function getPaymentIntent(
-  paymentIntentId: string
-): Promise<Stripe.PaymentIntent | null> {
+export async function getTransaction(
+  transactionId: string
+): Promise<any | null> {
   try {
-    return await stripe.paymentIntents.retrieve(paymentIntentId);
+    return await paddle.transactions.get(transactionId);
   } catch (error) {
-    console.error('Error retrieving payment intent:', error);
+    console.error('Error retrieving transaction:', error);
     return null;
   }
 }
 
 /**
- * Refund a payment
+ * Refund a transaction (if supported)
  */
-export async function refundPayment(
-  paymentIntentId: string,
+export async function refundTransaction(
+  transactionId: string,
   reason?: string
-): Promise<Stripe.Refund | null> {
+): Promise<any | null> {
   try {
-    return await stripe.refunds.create({
-      payment_intent: paymentIntentId,
-      reason: (reason as Stripe.RefundCreateParams.Reason) || 'requested_by_customer',
-    });
+    // Note: Refund API varies by Paddle version, this may need adjustment
+    console.warn('Refund functionality to be implemented based on Paddle API');
+    return null;
   } catch (error) {
-    console.error('Error refunding payment:', error);
+    console.error('Error refunding transaction:', error);
     return null;
   }
 }

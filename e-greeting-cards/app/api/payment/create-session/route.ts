@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     // Create Stripe checkout session
     const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    const checkoutUrl = await createCheckoutSession({
+    const { checkoutUrl, transactionId } = await createCheckoutSession({
       amountCents: template.priceCents,
       cardId: card.id,
       templateName: template.name,
@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
         success: true,
         cardId: card.id,
         checkoutUrl,
+        transactionId,
       },
       { status: 201 }
     );

@@ -5,195 +5,162 @@ import { motion } from 'framer-motion';
 interface CardContentProps {
   content: Record<string, string>;
   design: any;
+  styling?: Record<string, any>;
 }
 
-export default function CardContent({ content, design }: CardContentProps) {
-  const elements = design.elements || [];
-  const layout = design.layout || {};
+export default function CardContent({ content, design, styling = {} }: CardContentProps) {
+  const elements = design?.elements || [];
+  const layout = design?.layout || {};
 
-  // Build background style
+  // User's custom background overrides template default
+  const bgColors: string[] = styling?.backgroundValue || layout.backgroundValue || [];
+
   const backgroundStyle: React.CSSProperties = {};
-
-  if (layout.backgroundType === 'gradient' && layout.backgroundValue) {
-    const [color1, color2] = layout.backgroundValue;
-    backgroundStyle.background = `linear-gradient(to bottom right, ${color1}, ${color2})`;
+  if (bgColors.length >= 2) {
+    backgroundStyle.background = `linear-gradient(to bottom right, ${bgColors[0]}, ${bgColors[1]})`;
+  } else if (bgColors.length === 1) {
+    backgroundStyle.backgroundColor = bgColors[0];
   } else if (layout.backgroundType === 'solid' && layout.backgroundValue) {
-    backgroundStyle.backgroundColor = layout.backgroundValue[0];
+    backgroundStyle.backgroundColor = layout.backgroundValue[0] || layout.backgroundValue;
   }
+
+  // User's text color override (stored as Tailwind name → map to hex)
+  const textColorMap: Record<string, string> = {
+    'stone-900': '#1c1917',
+    'rose-500': '#f43f5e',
+    'slate-700': '#334155',
+    'emerald-600': '#059669',
+  };
+  const bodyTextColor = styling?.textColor
+    ? textColorMap[styling.textColor] || styling.textColor
+    : null;
+
+  // User's font size override for body text
+  const bodyFontSize = styling?.fontSize ? `${styling.fontSize}px` : null;
+
+  // Separate elements by ID for structured rendering
+  const headline = elements.find((e: any) => e.id === 'headline');
+  const body = elements.find((e: any) => e.id === 'body');
+  const signature = elements.find((e: any) => e.id === 'signature');
+
+  // Fallback: render all elements as generic text if structure unknown
+  const knownIds = ['headline', 'body', 'signature'];
+  const otherElements = elements.filter(
+    (e: any) => !knownIds.includes(e.id) && e.type === 'text'
+  );
 
   return (
     <div
-      className="relative w-full h-full min-h-[600px] rounded-lg overflow-hidden"
-      style={backgroundStyle}
+      className="relative w-full rounded-2xl overflow-hidden flex flex-col items-center justify-between p-8"
+      style={{ ...backgroundStyle, minHeight: '480px' }}
     >
-      {/* Render each element from design config */}
-      {elements.map((element: any) => {
-        if (element.type === 'text') {
-          return (
-            <TextElement
-              key={element.id}
-              element={element}
-              content={content[element.id] || element.defaultText}
-            />
-          );
-        }
+      {/* Recipient name (optional) */}
+      {content['recipientName'] && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
+          className="w-full text-left pl-2 mt-2"
+        >
+          <p
+            style={{
+              fontSize: '16px',
+              fontFamily: headline?.style?.fontFamily || 'system-ui, sans-serif',
+              color: bodyTextColor || '#777777',
+              fontStyle: 'italic',
+            }}
+          >
+            Dear {content['recipientName']},
+          </p>
+        </motion.div>
+      )}
 
-        if (element.type === 'image') {
-          return (
-            <ImageElement
-              key={element.id}
-              element={element}
-            />
-          );
-        }
+      {/* Top section: headline */}
+      {headline && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: headline.animations?.entrance?.delay || 0.3, ease: 'easeOut' }}
+          className="w-full text-center mt-4"
+        >
+          <p
+            style={{
+              fontSize: headline.style?.fontSize || '40px',
+              fontFamily: headline.style?.fontFamily || 'Georgia, serif',
+              fontWeight: headline.style?.fontWeight || '700',
+              color: headline.style?.color || '#333333',
+              lineHeight: '1.2',
+            }}
+          >
+            {content['headline'] || headline.defaultText || ''}
+          </p>
+        </motion.div>
+      )}
 
-        if (element.type === 'lottie') {
-          return (
-            <LottieElement
-              key={element.id}
-              element={element}
-            />
-          );
-        }
+      {/* Middle section: body */}
+      {body && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: body.animations?.entrance?.delay || 0.6, ease: 'easeOut' }}
+          className="w-full text-center my-6 px-4"
+        >
+          <p
+            style={{
+              fontSize: bodyFontSize || body.style?.fontSize || '18px',
+              fontFamily: body.style?.fontFamily || 'system-ui, sans-serif',
+              fontWeight: body.style?.fontWeight || '400',
+              color: bodyTextColor || body.style?.color || '#555555',
+              lineHeight: body.style?.lineHeight || '1.6',
+            }}
+          >
+            {content['body'] || body.defaultText || ''}
+          </p>
+        </motion.div>
+      )}
 
-        return null;
-      })}
+      {/* Other elements */}
+      {otherElements.map((element: any) => (
+        <motion.div
+          key={element.id}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: element.animations?.entrance?.delay || 0.5, ease: 'easeOut' }}
+          className="w-full text-center px-4"
+        >
+          <p
+            style={{
+              fontSize: element.style?.fontSize || '16px',
+              fontFamily: element.style?.fontFamily || 'system-ui',
+              color: element.style?.color || '#333333',
+            }}
+          >
+            {content[element.id] || element.defaultText || ''}
+          </p>
+        </motion.div>
+      ))}
+
+      {/* Bottom section: signature */}
+      {signature && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: signature.animations?.entrance?.delay || 0.9, ease: 'easeOut' }}
+          className="w-full text-right pr-4 mb-2"
+        >
+          <p
+            style={{
+              fontSize: signature.style?.fontSize || '18px',
+              fontFamily: signature.style?.fontFamily || 'Georgia, serif',
+              fontWeight: signature.style?.fontWeight || '400',
+              color: signature.style?.color || '#777777',
+              fontStyle: signature.style?.fontStyle || 'italic',
+            }}
+          >
+            {content['signature'] || signature.defaultText || ''}
+          </p>
+        </motion.div>
+      )}
     </div>
-  );
-}
-
-/**
- * Render text elements with animations
- */
-function TextElement({ element, content }: any) {
-  const style = element.style || {};
-  const animation = element.animations?.entrance || {};
-  const position = element.position || {};
-
-  // Build position styles
-  const positionStyle: React.CSSProperties = {
-    position: 'absolute',
-    ...Object.fromEntries(
-      Object.entries(position)
-        .filter(([key]) => ['top', 'bottom', 'left', 'right'].includes(key))
-        .map(([key, value]) => [key, value])
-    ),
-  };
-
-  // Handle centered positioning
-  if (position.left === '50%') {
-    positionStyle.transform = 'translateX(-50%)';
-  }
-
-  const animationVariants = {
-    hidden: {
-      opacity: 0,
-      y: animation.type === 'fadeInUp' ? 20 : 0,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        delay: animation.delay || 0,
-        ease: 'easeOut',
-      },
-    },
-  };
-
-  return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={animationVariants}
-      style={positionStyle}
-      className="max-w-full px-4"
-    >
-      <p
-        style={{
-          fontSize: style.fontSize || '16px',
-          fontFamily: style.fontFamily || 'system-ui',
-          fontWeight: style.fontWeight || 400,
-          color: style.color || '#000000',
-          textAlign: style.textAlign || 'left',
-          lineHeight: style.lineHeight || '1.5',
-          fontStyle: style.fontStyle || 'normal',
-          maxWidth: style.maxWidth || 'auto',
-          margin: 0,
-        }}
-      >
-        {content}
-      </p>
-    </motion.div>
-  );
-}
-
-/**
- * Render image elements
- */
-function ImageElement({ element }: any) {
-  const style = element.style || {};
-  const position = element.position || {};
-
-  const positionStyle: React.CSSProperties = {
-    position: 'absolute',
-    ...Object.fromEntries(
-      Object.entries(position)
-        .filter(([key]) => ['top', 'bottom', 'left', 'right'].includes(key))
-        .map(([key, value]) => [key, value])
-    ),
-  };
-
-  return (
-    <motion.img
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, delay: element.animations?.entrance?.delay || 0 }}
-      src={element.assetUrl}
-      alt={element.id}
-      style={{
-        ...positionStyle,
-        width: style.width || '200px',
-        height: style.height || '200px',
-        objectFit: 'contain',
-      }}
-    />
-  );
-}
-
-/**
- * Render Lottie animation elements
- */
-function LottieElement({ element }: any) {
-  const position = element.position || {};
-  const size = element.size || {};
-
-  const positionStyle: React.CSSProperties = {
-    position: 'absolute',
-    ...Object.fromEntries(
-      Object.entries(position)
-        .filter(([key]) => ['top', 'bottom', 'left', 'right'].includes(key))
-        .map(([key, value]) => [key, value])
-    ),
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, delay: element.animations?.entrance?.delay || 0 }}
-      style={{
-        ...positionStyle,
-        width: size.width || '200px',
-        height: size.height || '200px',
-      }}
-      className="flex items-center justify-center"
-    >
-      <div className="w-full h-full bg-gray-100 rounded flex items-center justify-center">
-        <p className="text-gray-500 text-sm">
-          Lottie: {element.id}
-        </p>
-      </div>
-    </motion.div>
   );
 }

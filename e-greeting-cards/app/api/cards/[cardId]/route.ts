@@ -9,10 +9,10 @@ export const runtime = 'nodejs';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { cardId: string } }
+  { params }: { params: Promise<{ cardId: string }> }
 ) {
   try {
-    const { cardId } = params;
+    const { cardId } = await params;
 
     if (!cardId) {
       return NextResponse.json(

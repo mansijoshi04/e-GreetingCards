@@ -13,8 +13,15 @@ interface CardRendererProps {
 }
 
 export default function CardRenderer({ card, linkToken }: CardRendererProps) {
-  const designConfig = card.template.designConfig as any;
-  const customText = card.customText as any;
+  const designConfig = typeof card.template.designConfig === 'string'
+    ? JSON.parse(card.template.designConfig)
+    : card.template.designConfig as any;
+  const customText = typeof card.customText === 'string'
+    ? JSON.parse(card.customText)
+    : card.customText as any;
+  const customStyling = typeof card.customStyling === 'string'
+    ? JSON.parse(card.customStyling)
+    : (card.customStyling as any) || {};
 
   // Track card open on client side (after hydration)
   useEffect(() => {
@@ -46,7 +53,10 @@ export default function CardRenderer({ card, linkToken }: CardRendererProps) {
       <ClickToReveal
         content={customText}
         design={designConfig}
+        styling={customStyling}
         cardId={card.id}
+        category={card.template.category}
+        tier={card.template.tier}
       />
     );
   }
@@ -56,7 +66,10 @@ export default function CardRenderer({ card, linkToken }: CardRendererProps) {
     <ScrollToOpen
       content={customText}
       design={designConfig}
+      styling={customStyling}
       cardId={card.id}
+      category={card.template.category}
+      tier={card.template.tier}
     />
   );
 }

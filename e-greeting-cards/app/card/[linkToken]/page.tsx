@@ -10,9 +10,9 @@ import {
 export const dynamic = 'force-dynamic';
 
 interface CardPageProps {
-  params: {
+  params: Promise<{
     linkToken: string;
-  };
+  }>;
 }
 
 /**
@@ -21,7 +21,7 @@ interface CardPageProps {
 export async function generateMetadata({
   params,
 }: CardPageProps): Promise<Metadata> {
-  const { linkToken } = params;
+  const { linkToken } = await params;
 
   // Validate link
   const validation = await validateLink(linkToken);
@@ -75,7 +75,7 @@ export async function generateMetadata({
  * Server component that validates and renders the card
  */
 export default async function CardPage({ params }: CardPageProps) {
-  const { linkToken } = params;
+  const { linkToken } = await params;
 
   // 1. Validate link token
   const validation = await validateLink(linkToken);

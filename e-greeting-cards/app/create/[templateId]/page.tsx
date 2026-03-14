@@ -19,7 +19,7 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
   const router = useRouter();
   const [template, setTemplate] = useState<Template | null>(null);
   const [loading, setLoading] = useState(true);
-  const [customText, setCustomText] = useState({
+  const [customText, setCustomText] = useState<Record<string, string>>({
     recipientName: '',
     headline: '',
     body: '',

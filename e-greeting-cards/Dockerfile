@@ -3,14 +3,20 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json ./
+# Install openssl so Prisma can detect the version and generate the correct binary
+RUN apk add --no-cache openssl
+
+# Copy package.json only - lock file excluded to avoid npm version conflicts between host and container
+COPY package.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install --omit=optional
 
 # Copy source code
 COPY . .
+
+# Generate Prisma client (schema is now available)
+RUN npx prisma generate
 
 # Build Next.js
 RUN npm run build
@@ -20,8 +26,8 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+# Install dumb-init and openssl (openssl required for Prisma to detect OpenSSL 3.x on Alpine)
+RUN apk add --no-cache dumb-init openssl
 
 # Copy from builder
 COPY --from=builder /app/node_modules ./node_modules

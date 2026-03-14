@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
     const ipAddress =
       request.headers.get('x-forwarded-for') ||
       request.headers.get('x-real-ip') ||
-      request.ip ||
       'unknown';
 
     // Detect device type from user agent
