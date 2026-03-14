@@ -7,25 +7,19 @@ Work through these one by one — top of each section = highest priority.
 
 ## UI / UX
 
-### #1 — Template gallery filters
-**What**: Add filter tabs on `/create` to filter cards by category (Birthday, Anniversary, Graduation, Thank You) and tier (Basic, Premium).
-**Where**: `app/create/page.tsx` + `components/templates/TemplateGallery.tsx`
-**How**: Filter state in parent, pass down as prop. Categories come from existing `template.category` values already in DB. No API change needed — filter client-side from the fetched list.
+### ✅ #1 — Template gallery filters
+Category pills (Birthday, Anniversary, Graduation, Thank You) + tier pills (Basic/Premium) added to `/create`. Both compose via URL params. Empty state shows "no templates match" message.
 
 ---
 
-### #2 — Colour picker: text colour not applying + proper colour picker
-**What (bug)**: The "Message Colour" swatch in the customisation panel updates `customStyling` state but the `CardPreview` and `CardContent` components don't apply it to the text elements. Fix the wiring.
-**What (feature)**: Replace the 4 preset colour swatches with a full colour picker — the native `<input type="color">` or a library like `react-colorful` so users can pick any hex or adjust hue/saturation/lightness.
-**Where**: `components/editor/CustomizationPanel.tsx` (picker UI), `components/editor/CardPreview.tsx` + `components/cards/CardContent.tsx` (applying the colour).
-**Background colour**: Same improvement — allow any background colour, not just 4 presets. Background is either a solid or a gradient (two stops). Show two colour pickers side-by-side for gradient templates.
+### ✅ #2 — Colour picker: text colour not applying + proper colour picker
+Bug fixed: `customStyling.textColor` now applied in `CardPreview` and `CardContent` (body + signature).
+Feature: Replaced 4 preset swatches with `<input type="color">` + quick swatches for text colour. Background section now has two colour pickers for gradient stops (with live preview swatch) plus named presets below. `textColor` stored as hex.
 
 ---
 
-### #3 — Animation preview before going to recipients
-**What**: After customising a card, instead of going straight to `/recipients`, show a full-screen preview that plays the card's animation (scroll-to-open or click-to-reveal). User confirms "Looks good → Add Recipients" or goes back to edit.
-**Where**: Add a `PreviewModal` component or a dedicated `/preview` step between `/create/[templateId]` and `/recipients`.
-**Notes**: The `CardRenderer` + animation components already exist. Just need a modal or page wrapper with a "Send this card →" CTA.
+### ✅ #3 — Animation preview before going to recipients
+`PreviewModal` created (`components/editor/PreviewModal.tsx`). "Next: Recipients" opens a full-screen overlay with a live card preview and animation type hint. User confirms with "Looks good → Add Recipients" or goes back to edit.
 
 ---
 
@@ -43,57 +37,36 @@ Work through these one by one — top of each section = highest priority.
 
 ---
 
-### #6 — Add 3 more basic cards + 3 more premium cards (total 9)
-**What**: Expand the seed file with 6 new templates so there's a meaningful selection and a clearer distinction between basic and premium.
-
-Suggested additions:
-**Basic** (simple animations, solid/gradient bg):
-- "Confetti Burst" — Birthday, heavy confetti, rainbow
-- "Simple Thanks" — Thank You, minimal fade-in, clean sans-serif
-- "Achievement" — Graduation, gold shimmer, bold typography
-
-**Premium** (unique reveal, richer design):
-- "Cake Celebration" — Birthday, animated candles, click-to-reveal
-- "Heart Float" — Anniversary, floating hearts, click-to-reveal
-- "Cap Toss" — Graduation, scroll triggers cap-toss animation
-
-**Where**: `prisma/seed.ts` — add 6 new `prisma.template.create()` blocks.
-**After adding**: `docker compose down -v && docker compose up` to reseed.
+### ✅ #6 — Add 3 more basic cards + 3 more premium cards (total 9)
+6 new templates added to `prisma/seed.ts`: Confetti Burst (birthday/basic), Simple Thanks (thankYou/basic), Achievement (graduation/basic), Cake Celebration (birthday/premium), Heart Float (anniversary/premium), Cap Toss (graduation/premium).
+**To apply**: `docker compose down -v && docker compose up` to reseed.
 
 ---
 
-### #7 — Shared Navbar and Footer components
-**What**: `app/page.tsx`, `app/about/page.tsx`, `app/faq/page.tsx`, `app/create/page.tsx` all duplicate the same Navbar and Footer HTML. Extract into `components/layout/Navbar.tsx` and `components/layout/Footer.tsx`.
-**Where**: Create `components/layout/` folder. Import into each page (or add to `app/layout.tsx` if all pages should share it).
+### ✅ #7 — Shared Navbar and Footer components
+`components/layout/Navbar.tsx` and `components/layout/Footer.tsx` created. All four public pages (`page.tsx`, `about`, `faq`, `create`) now use the shared components.
 
 ---
 
 ## Legal / Compliance
 
-### #8 — Privacy Policy page (required for Paddle production)
-**What**: Create `app/privacy/page.tsx` with a real privacy policy.
-**Minimum content**: Data collected (email, payment info via Paddle), how it's used, retention (cards expire in 7 days), third-party services (Paddle, SendGrid), contact email.
-**Link**: Already referenced in footer as `href="#"` — update to `/privacy`.
+### ✅ #8 — Privacy Policy page
+`app/privacy/page.tsx` created with data collection, usage, retention, third-party services, and contact info.
 
 ---
 
-### #9 — Refund Policy page (required for Paddle production)
-**What**: Create `app/refund/page.tsx`.
-**Minimum content**: Cards are digital goods delivered on purchase — refunds within 24 hours if card was not opened by any recipient. Contact process for requesting a refund.
-**Link**: Add to footer under Company section.
+### ✅ #9 — Refund Policy page
+`app/refund/page.tsx` created. Covers digital goods policy, 24-hour refund eligibility, and contact process.
 
 ---
 
-### #10 — Terms of Service page (required for Paddle production)
-**What**: Create `app/terms/page.tsx`.
-**Minimum content**: Acceptable use, no harassment/spam, card expiry policy, payment terms, intellectual property of templates.
-**Link**: Add to footer.
+### ✅ #10 — Terms of Service page
+`app/terms/page.tsx` created. Covers acceptable use, card expiry, payment terms, IP, and liability.
 
 ---
 
-### #11 — Footer links: update # placeholders to real pages
-**What**: The footer has `href="#"` for Privacy Policy and Contact. Once pages are created, update all footer links across `page.tsx`, `about/page.tsx`, `faq/page.tsx`, `create/page.tsx`.
-**Depends on**: #7 (shared footer), #8, #9, #10.
+### ✅ #11 — Footer links: update # placeholders to real pages
+Shared `Footer.tsx` links to `/privacy`, `/refund`, and `/terms`.
 
 ---
 
@@ -107,15 +80,12 @@ Suggested additions:
 - [ ] Paddle production keys + live webhook URL
 - [ ] SendGrid sender domain verified
 - [ ] `BASE_URL` set to production domain
-- [ ] `metadataBase` set in `app/layout.tsx` (Next.js warns about this currently)
 - [ ] Switch `NODE_ENV` to `production` (disables `/api/dev/mock-payment`)
 
 ---
 
-### #13 — Fix `metadataBase` warning
-**What**: Next.js logs a warning: `metadataBase property in metadata export is not set`. Set it in `app/layout.tsx`.
-**How**: `export const metadata = { metadataBase: new URL(process.env.BASE_URL || 'http://localhost:3000'), ... }`
-**Small task — do this soon.**
+### ✅ #13 — Fix `metadataBase` warning
+`metadataBase: new URL(process.env.BASE_URL || 'http://localhost:3000')` added to `app/layout.tsx`.
 
 ---
 
