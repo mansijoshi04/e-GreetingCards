@@ -4,20 +4,29 @@ import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import CardContent from '@/components/cards/CardContent';
 import ConfettiLayer from '@/components/cards/ConfettiLayer';
+import ShareButton from '@/components/ui/ShareButton';
+import { shareCard, downloadCardAsPng } from '@/lib/utils/cardUtils';
 
 interface ScrollToOpenProps {
   content: Record<string, string>;
   design: any;
+  styling?: Record<string, any>;
   cardId: string;
+  category?: string;
+  tier?: string;
 }
 
 export default function ScrollToOpen({
   content,
   design,
+  styling = {},
   cardId,
+  category = 'birthday',
+  tier = 'basic',
 }: ScrollToOpenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
+  const [cardRevealed, setCardRevealed] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -28,18 +37,19 @@ export default function ScrollToOpen({
   const flapRotation = useTransform(scrollYProgress, [0, 0.4], [0, -180]);
 
   // Map scroll to card reveal position (400px below to 0)
-  const cardY = useTransform(scrollYProgress, [0.2, 0.8], [400, 0]);
+  const cardY = useTransform(scrollYProgress, [0.1, 0.55], [400, 0]);
 
   // Map scroll to card opacity
-  const cardOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0, 1]);
+  const cardOpacity = useTransform(scrollYProgress, [0.1, 0.35], [0, 1]);
 
-  // Trigger confetti when scroll reaches 70%
-  const confettiTrigger = useTransform(scrollYProgress, (value) => {
-    if (value > 0.7 && !hasTriggeredConfetti) {
+  // Trigger confetti + reveal buttons when card is fully up
+  useTransform(scrollYProgress, (value) => {
+    if (value > 0.55 && !hasTriggeredConfetti) {
       setHasTriggeredConfetti(true);
-      return true;
     }
-    return value > 0.7;
+    if (value > 0.4 && !cardRevealed) {
+      setCardRevealed(true);
+    }
   });
 
   const layout = design.layout || {};
@@ -65,13 +75,13 @@ export default function ScrollToOpen({
 
         {/* Card content (slides out) */}
         <motion.div
-          className="absolute w-80 rounded-lg shadow-2xl z-30"
+          className="absolute w-80 rounded-lg shadow-2xl z-30 card-content-wrapper"
           style={{
             y: cardY,
             opacity: cardOpacity,
           }}
         >
-          <CardContent content={content} design={design} />
+          <CardContent content={content} design={design} styling={styling} />
         </motion.div>
 
         {/* Confetti effect */}
@@ -80,6 +90,8 @@ export default function ScrollToOpen({
             trigger={hasTriggeredConfetti}
             config={confettiConfig}
             cardId={cardId}
+            category={category}
+            tier={tier}
           />
         )}
 
@@ -94,77 +106,25 @@ export default function ScrollToOpen({
             <p className="text-lg">Scroll down to open</p>
             <p className="text-sm text-gray-500 mt-1">↓</p>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Share buttons (bottom) */}
+        {/* Share buttons (bottom) — shown once card is revealed */}
         <motion.div
-          className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40"
+          className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40 flex-wrap px-4"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: cardOpacity as any, y: 0 }}
-          transition={{ delay: 0.5 }}
+          animate={{ opacity: cardRevealed ? 1 : 0, y: cardRevealed ? 0 : 20 }}
+          transition={{ duration: 0.4 }}
         >
+          <ShareButton onClick={() => shareCard('copy')} icon="📋" label="Copy Link" />
+          <ShareButton onClick={() => shareCard('whatsapp')} icon="💬" label="WhatsApp" />
+          <ShareButton onClick={() => shareCard('email')} icon="📧" label="Email" />
           <ShareButton
-            onClick={() => shareCard('copy')}
-            icon="📋"
-            label="Copy Link"
-          />
-          <ShareButton
-            onClick={() => shareCard('whatsapp')}
-            icon="💬"
-            label="WhatsApp"
-          />
-          <ShareButton
-            onClick={() => shareCard('email')}
-            icon="📧"
-            label="Email"
+            onClick={() => downloadCardAsPng('.card-content-wrapper')}
+            icon="🖼️"
+            label="Download"
           />
         </motion.div>
       </div>
     </div>
   );
-}
-
-/**
- * Share button component
- */
-function ShareButton({
-  onClick,
-  icon,
-  label,
-}: {
-  onClick: () => void;
-  icon: string;
-  label: string;
-}) {
-  return (
-    <motion.button
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={onClick}
-      className="px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-2 text-sm font-medium"
-    >
-      <span>{icon}</span>
-      <span>{label}</span>
-    </motion.button>
-  );
-}
-
-/**
- * Share card via different channels
- */
-function shareCard(method: 'copy' | 'whatsapp' | 'email') {
-  const url = window.location.href;
-  const title = 'You received a special greeting card!';
-
-  if (method === 'copy') {
-    navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  } else if (method === 'whatsapp') {
-    const text = encodeURIComponent(`${title}\n\n${url}`);
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-  } else if (method === 'email') {
-    const subject = encodeURIComponent(title);
-    const body = encodeURIComponent(`Open this greeting card:\n\n${url}`);
-    window.open(`mailto:?subject=${subject}&body=${body}`);
-  }
 }

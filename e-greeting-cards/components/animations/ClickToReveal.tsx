@@ -4,17 +4,25 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CardContent from '@/components/cards/CardContent';
 import ConfettiLayer from '@/components/cards/ConfettiLayer';
+import ShareButton from '@/components/ui/ShareButton';
+import { shareCard, downloadCardAsPng } from '@/lib/utils/cardUtils';
 
 interface ClickToRevealProps {
   content: Record<string, string>;
   design: any;
+  styling?: Record<string, any>;
   cardId: string;
+  category?: string;
+  tier?: string;
 }
 
 export default function ClickToReveal({
   content,
   design,
+  styling = {},
   cardId,
+  category = 'birthday',
+  tier = 'basic',
 }: ClickToRevealProps) {
   const [isRevealed, setIsRevealed] = useState(false);
   const confettiConfig = design.animations?.confetti || {};
@@ -81,7 +89,7 @@ export default function ClickToReveal({
 
       {/* Card content - fades and scales in */}
       <motion.div
-        className="max-w-2xl w-full mx-auto px-4 z-40 relative"
+        className="max-w-2xl w-full mx-auto px-4 z-40 relative click-to-reveal-card"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={
           isRevealed
@@ -94,7 +102,7 @@ export default function ClickToReveal({
         }}
       >
         <div className="rounded-2xl shadow-2xl overflow-hidden">
-          <CardContent content={content} design={design} />
+          <CardContent content={content} design={design} styling={styling} />
         </div>
       </motion.div>
 
@@ -102,26 +110,19 @@ export default function ClickToReveal({
       <AnimatePresence>
         {isRevealed && (
           <motion.div
-            className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40"
+            className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40 flex-wrap px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ delay: 0.5 }}
           >
+            <ShareButton onClick={() => shareCard('copy')} icon="📋" label="Copy Link" />
+            <ShareButton onClick={() => shareCard('whatsapp')} icon="💬" label="WhatsApp" />
+            <ShareButton onClick={() => shareCard('email')} icon="📧" label="Email" />
             <ShareButton
-              onClick={() => shareCard('copy')}
-              icon="📋"
-              label="Copy Link"
-            />
-            <ShareButton
-              onClick={() => shareCard('whatsapp')}
-              icon="💬"
-              label="WhatsApp"
-            />
-            <ShareButton
-              onClick={() => shareCard('email')}
-              icon="📧"
-              label="Email"
+              onClick={() => downloadCardAsPng('.click-to-reveal-card')}
+              icon="🖼️"
+              label="Download"
             />
           </motion.div>
         )}
@@ -129,53 +130,14 @@ export default function ClickToReveal({
 
       {/* Confetti effect */}
       {confettiConfig.enabled && isRevealed && (
-        <ConfettiLayer trigger={isRevealed} config={confettiConfig} cardId={cardId} />
+        <ConfettiLayer
+          trigger={isRevealed}
+          config={confettiConfig}
+          cardId={cardId}
+          category={category}
+          tier={tier}
+        />
       )}
     </div>
   );
-}
-
-/**
- * Share button component
- */
-function ShareButton({
-  onClick,
-  icon,
-  label,
-}: {
-  onClick: () => void;
-  icon: string;
-  label: string;
-}) {
-  return (
-    <motion.button
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={onClick}
-      className="px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-2 text-sm font-medium"
-    >
-      <span>{icon}</span>
-      <span>{label}</span>
-    </motion.button>
-  );
-}
-
-/**
- * Share card via different channels
- */
-function shareCard(method: 'copy' | 'whatsapp' | 'email') {
-  const url = window.location.href;
-  const title = 'You received a special greeting card!';
-
-  if (method === 'copy') {
-    navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  } else if (method === 'whatsapp') {
-    const text = encodeURIComponent(`${title}\n\n${url}`);
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-  } else if (method === 'email') {
-    const subject = encodeURIComponent(title);
-    const body = encodeURIComponent(`Open this greeting card:\n\n${url}`);
-    window.open(`mailto:?subject=${subject}&body=${body}`);
-  }
 }
