@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Loader2, Lightbulb } from 'lucide-react';
 
 interface CardDraft {
   templateId: string;
@@ -144,7 +145,7 @@ export default function RecipientsPage() {
     return (
       <div className="min-h-screen bg-[#fdfcfb] flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">✨</div>
+          <Loader2 size={40} className="animate-spin text-rose-400 mb-4 mx-auto" />
           <p className="text-stone-600 font-medium">Loading...</p>
         </div>
       </div>
@@ -338,7 +339,7 @@ export default function RecipientsPage() {
               className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-900"
             >
               <p>
-                💡 <strong>No account needed:</strong> Recipients get an email with a link. Cards expire in 7 days.
+                <Lightbulb size={14} className="inline mr-1 shrink-0" /> <strong>No account needed:</strong> Recipients get an email with a link. Cards expire in 7 days.
               </p>
             </motion.div>
 

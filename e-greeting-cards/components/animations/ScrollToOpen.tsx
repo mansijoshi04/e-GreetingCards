@@ -6,6 +6,7 @@ import CardContent from '@/components/cards/CardContent';
 import ConfettiLayer from '@/components/cards/ConfettiLayer';
 import ShareButton from '@/components/ui/ShareButton';
 import { shareCard, downloadCardAsPng } from '@/lib/utils/cardUtils';
+import { Copy, MessageCircle, Mail, Download } from 'lucide-react';
 
 interface ScrollToOpenProps {
   content: Record<string, string>;
@@ -115,12 +116,12 @@ export default function ScrollToOpen({
           animate={{ opacity: cardRevealed ? 1 : 0, y: cardRevealed ? 0 : 20 }}
           transition={{ duration: 0.4 }}
         >
-          <ShareButton onClick={() => shareCard('copy')} icon="📋" label="Copy Link" />
-          <ShareButton onClick={() => shareCard('whatsapp')} icon="💬" label="WhatsApp" />
-          <ShareButton onClick={() => shareCard('email')} icon="📧" label="Email" />
+          <ShareButton onClick={() => shareCard('copy')} Icon={Copy} label="Copy Link" />
+          <ShareButton onClick={() => shareCard('whatsapp')} Icon={MessageCircle} label="WhatsApp" />
+          <ShareButton onClick={() => shareCard('email')} Icon={Mail} label="Email" />
           <ShareButton
             onClick={() => downloadCardAsPng('.card-content-wrapper')}
-            icon="🖼️"
+            Icon={Download}
             label="Download"
           />
         </motion.div>

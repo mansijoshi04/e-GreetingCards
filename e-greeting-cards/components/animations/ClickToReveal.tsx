@@ -6,6 +6,7 @@ import CardContent from '@/components/cards/CardContent';
 import ConfettiLayer from '@/components/cards/ConfettiLayer';
 import ShareButton from '@/components/ui/ShareButton';
 import { shareCard, downloadCardAsPng } from '@/lib/utils/cardUtils';
+import { Copy, MessageCircle, Mail, Download, PartyPopper } from 'lucide-react';
 
 interface ClickToRevealProps {
   content: Record<string, string>;
@@ -52,14 +53,15 @@ export default function ClickToReveal({
               exit={{ scale: 0.8 }}
               transition={{ duration: 0.5 }}
             >
-              <motion.h2
-                className="text-4xl md:text-5xl font-bold mb-4 font-headline"
+              <motion.div
+                className="flex items-center justify-center gap-3 text-4xl md:text-5xl font-bold mb-4 font-headline"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                🎉 You've got a card!
-              </motion.h2>
+                <PartyPopper className="w-12 h-12" />
+                <span>You've got a card!</span>
+              </motion.div>
               <motion.p
                 className="text-xl md:text-2xl"
                 initial={{ y: 20, opacity: 0 }}
@@ -116,12 +118,12 @@ export default function ClickToReveal({
             exit={{ opacity: 0, y: 20 }}
             transition={{ delay: 0.5 }}
           >
-            <ShareButton onClick={() => shareCard('copy')} icon="📋" label="Copy Link" />
-            <ShareButton onClick={() => shareCard('whatsapp')} icon="💬" label="WhatsApp" />
-            <ShareButton onClick={() => shareCard('email')} icon="📧" label="Email" />
+            <ShareButton onClick={() => shareCard('copy')} Icon={Copy} label="Copy Link" />
+            <ShareButton onClick={() => shareCard('whatsapp')} Icon={MessageCircle} label="WhatsApp" />
+            <ShareButton onClick={() => shareCard('email')} Icon={Mail} label="Email" />
             <ShareButton
               onClick={() => downloadCardAsPng('.click-to-reveal-card')}
-              icon="🖼️"
+              Icon={Download}
               label="Download"
             />
           </motion.div>

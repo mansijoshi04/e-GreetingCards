@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Template } from '@prisma/client';
+import { Lightbulb } from 'lucide-react';
 
 interface CustomizationPanelProps {
   template: Template;
@@ -274,8 +275,9 @@ export default function CustomizationPanel({
         transition={{ delay: 0.4 }}
         className="bg-rose-50 border border-rose-200 rounded-xl p-4 text-sm text-rose-900"
       >
-        <p>
-          💡 <strong>Preview:</strong> See live changes in the card on the right as you type.
+        <p className="flex items-start gap-2">
+          <Lightbulb size={14} className="mt-0.5 shrink-0" />
+          <span><strong>Preview:</strong> See live changes in the card on the right as you type.</span>
         </p>
       </motion.div>
     </motion.div>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Gift, Sparkles, Heart } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <button className="flex items-center gap-2 group cursor-pointer hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-            
+              <Heart size={14} fill="white" />
             </div>
             <span className="font-serif text-xl font-bold tracking-tight text-stone-900">Giflove</span>
           </button>
@@ -35,7 +36,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center mb-20">
           <h1 className="font-serif text-6xl md:text-7xl font-light mb-6 leading-tight text-stone-900">
             Digital greetings, <br />
-            <span className="italic">beautifully crafted.</span>
+            beautifully crafted.
           </h1>
           <p className="text-stone-500 text-lg max-w-xl mx-auto">
             Send more than just a message. Choose from our curated collection of artistic e-cards and personalize them for your loved ones.
@@ -48,8 +49,8 @@ export default function Home() {
             whileHover={{ y: -10 }}
             className="bg-white p-10 rounded-[2rem] border border-stone-100 shadow-sm flex flex-col items-center text-center"
           >
-            <div className="w-16 h-16 bg-stone-50 rounded-2xl flex items-center justify-center mb-6 text-2xl">
-              🎁
+            <div className="w-16 h-16 bg-stone-50 rounded-2xl flex items-center justify-center mb-6">
+              <Gift size={28} className="text-stone-600" />
             </div>
             <h3 className="font-serif text-3xl mb-2 text-stone-900">Basic Collection</h3>
             <div className="text-4xl font-light mb-6 text-stone-900">
@@ -85,14 +86,14 @@ export default function Home() {
             <div className="absolute top-6 right-6 bg-rose-500 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
               Popular
             </div>
-            <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6 text-2xl">
-              ✨
+            <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
+              <Sparkles size={28} className="text-rose-400" />
             </div>
             <h3 className="font-serif text-3xl mb-2 text-white">Premium Collection</h3>
             <div className="text-4xl font-light mb-6 text-white">
               $5<span className="text-lg text-white/40">/card</span>
             </div>
-            <ul className="text-white/60 space-y-3 mb-10 text-sm">
+            <ul className="text-white/80 space-y-3 mb-10 text-base">
               <li className="flex items-center gap-2">
                 <span className="text-rose-400">✓</span>
                 Exclusive Premium Designs
@@ -126,7 +127,7 @@ export default function Home() {
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white">
-                
+                <Heart size={14} fill="white" />
               </div>
               <span className="font-serif text-2xl font-bold tracking-tight">Giflove</span>
             </div>

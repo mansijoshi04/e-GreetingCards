@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Heart, HelpCircle } from 'lucide-react';
 
 export const metadata = {
   title: 'How it Works - Giflove',
@@ -32,7 +33,7 @@ export default function FAQPage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group cursor-pointer hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-              💌
+              <Heart size={14} fill="white" />
             </div>
             <span className="font-serif text-xl font-bold tracking-tight text-stone-900">Giflove</span>
           </Link>
@@ -57,7 +58,7 @@ export default function FAQPage() {
           {faqs.map((faq, i) => (
             <div key={i} className="bg-white p-8 rounded-3xl border border-stone-100 shadow-sm">
               <h4 className="font-serif text-2xl mb-4 flex items-center gap-3 text-stone-900">
-                <span className="text-rose-500">❓</span>
+                <HelpCircle size={20} className="text-rose-500 shrink-0" />
                 {faq.q}
               </h4>
               <p className="text-stone-500 leading-relaxed">{faq.a}</p>
@@ -72,7 +73,7 @@ export default function FAQPage() {
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white">
-    
+                <Heart size={14} fill="white" />
               </div>
               <span className="font-serif text-2xl font-bold tracking-tight">Giflove</span>
             </div>

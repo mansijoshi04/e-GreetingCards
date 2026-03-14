@@ -2,6 +2,7 @@
 
 import { Template } from '@prisma/client';
 import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 import CardPreview from './CardPreview';
 
 interface PreviewPaneProps {
@@ -37,7 +38,9 @@ export default function PreviewPane({
       >
         <p className="font-semibold text-stone-900">{template.name}</p>
         <p>
-          {template.tier === 'premium' ? '✨ Premium Card ($5)' : 'Basic Card ($3)'}
+          {template.tier === 'premium' ? (
+            <span className="inline-flex items-center gap-1"><Sparkles size={12} /> Premium Card ($5)</span>
+          ) : 'Basic Card ($3)'}
         </p>
         <p className="text-stone-500">Live preview • Edit on the left</p>
       </motion.div>

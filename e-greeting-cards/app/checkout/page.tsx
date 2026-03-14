@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Script from 'next/script';
+import { Loader2, Lightbulb } from 'lucide-react';
 
 interface CardDraft {
   templateId: string;
@@ -138,7 +139,7 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">✨</div>
+          <Loader2 size={40} className="animate-spin text-pink-400 mb-4 mx-auto" />
           <p className="text-gray-600 font-medium">Loading checkout...</p>
         </div>
       </div>
@@ -235,7 +236,10 @@ export default function CheckoutPage() {
                 transition={{ delay: 0.4 }}
                 className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800"
               >
-                💡 Your card will be sent to {cardDraft.recipients.length} recipient{cardDraft.recipients.length !== 1 ? 's' : ''} via email after payment. The link expires in 7 days.
+                <span className="inline-flex items-start gap-2">
+                  <Lightbulb size={14} className="mt-0.5 shrink-0" />
+                  Your card will be sent to {cardDraft.recipients.length} recipient{cardDraft.recipients.length !== 1 ? 's' : ''} via email after payment. The link expires in 7 days.
+                </span>
               </motion.div>
             </motion.div>
 

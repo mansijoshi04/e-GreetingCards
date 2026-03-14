@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { Heart } from 'lucide-react';
+
 import TemplateGallery from '@/components/templates/TemplateGallery';
 import { getAllTemplates } from '@/lib/services/templateService';
 
@@ -27,8 +29,10 @@ export default async function CreatePage({
       {/* Navbar */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-100">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">💌</span>
+          <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+              <Heart size={14} fill="white" />
+            </div>
             <span className="text-xl font-serif font-semibold text-stone-900">
               Giflove
             </span>
@@ -94,17 +98,41 @@ export default async function CreatePage({
         </div>
       </section>
 
-      {/* Footer CTA */}
-      <section className="py-16 px-6 bg-rose-50 border-t border-stone-200">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-serif font-bold text-stone-900 mb-4">
-            Ready to create your card?
-          </h2>
-          <p className="text-lg text-stone-600 mb-6">
-            Select a template above to customize with your personal message
-          </p>
+      {/* Footer */}
+      <footer className="bg-stone-900 text-white py-20 px-6">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
+          <div className="col-span-2">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white">
+                <Heart size={14} fill="white" />
+              </div>
+              <span className="font-serif text-2xl font-bold tracking-tight">Giflove</span>
+            </div>
+            <p className="text-white/40 max-w-sm">
+              Elevating digital connections through artistic design and personal touch.
+            </p>
+          </div>
+          <div>
+            <h5 className="text-xs font-bold uppercase tracking-widest text-white/20 mb-6">Platform</h5>
+            <ul className="space-y-4 text-sm text-white/60">
+              <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
+              <li><Link href="/create" className="hover:text-white transition-colors">Browse Cards</Link></li>
+              <li><Link href="/faq" className="hover:text-white transition-colors">How it Works</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="text-xs font-bold uppercase tracking-widest text-white/20 mb-6">Company</h5>
+            <ul className="space-y-4 text-sm text-white/60">
+              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+            </ul>
+          </div>
         </div>
-      </section>
+        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 text-center text-white/20 text-xs">
+          © 2024 Giflove. All rights reserved.
+        </div>
+      </footer>
     </main>
   );
 }

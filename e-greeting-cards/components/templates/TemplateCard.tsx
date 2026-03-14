@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Template } from '@prisma/client';
 import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 
 interface TemplateCardProps {
   template: Template;
@@ -61,7 +62,7 @@ export default function TemplateCard({ template }: TemplateCardProps) {
           animate={template.tier === 'premium' ? { rotate: [0, -5, 5, 0] } : {}}
           transition={template.tier === 'premium' ? { duration: 3, repeat: Infinity } : {}}
         >
-          {template.tier === 'premium' && <span>✨</span>}
+          {template.tier === 'premium' && <Sparkles size={12} />}
           {tierLabel}
         </motion.div>
 

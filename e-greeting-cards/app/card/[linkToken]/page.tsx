@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { Frown } from 'lucide-react';
 import CardRenderer from '@/components/cards/CardRenderer';
 import {
   validateLink,
@@ -84,7 +85,7 @@ export default async function CardPage({ params }: CardPageProps) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-50">
         <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
-          <div className="text-6xl mb-4">😢</div>
+          <div className="flex justify-center mb-4"><Frown size={64} className="text-pink-400" /></div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Card Expired</h1>
           <p className="text-gray-600 mb-8">
             {validation.message || 'This greeting card is no longer available.'}

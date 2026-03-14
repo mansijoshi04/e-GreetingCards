@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Heart } from 'lucide-react';
 
 export const metadata = {
   title: 'About - Giflove',
@@ -13,7 +14,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group cursor-pointer hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-              💌
+              <Heart size={14} fill="white" />
             </div>
             <span className="font-serif text-xl font-bold tracking-tight text-stone-900">Giflove</span>
           </Link>
@@ -65,7 +66,7 @@ export default function AboutPage() {
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white">
-                💌
+                <Heart size={14} fill="white" />
               </div>
               <span className="font-serif text-2xl font-bold tracking-tight">Giflove</span>
             </div>

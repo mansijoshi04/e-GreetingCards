@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Loader2, AlertTriangle, PartyPopper, Check, MessageCircle, Mail, Lightbulb, Copy } from 'lucide-react';
 
 interface ConfirmationPageProps {
   params: Promise<{
@@ -85,7 +86,7 @@ export default function ConfirmationPage({
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-5xl mb-4">✨</div>
+          <Loader2 size={48} className="animate-spin text-pink-400 mb-4 mx-auto" />
           <p className="text-gray-600 font-medium">Loading confirmation...</p>
         </div>
       </div>
@@ -96,7 +97,7 @@ export default function ConfirmationPage({
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-5xl mb-4">⚠️</div>
+          <AlertTriangle size={48} className="text-amber-400 mb-4 mx-auto" />
           <p className="text-red-600 font-medium mb-4">{error}</p>
           <Link
             href="/create"
@@ -134,7 +135,7 @@ export default function ConfirmationPage({
             transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
             className="text-center mb-8"
           >
-            <div className="text-6xl mb-4">🎉</div>
+            <div className="flex justify-center mb-4"><PartyPopper size={56} className="text-pink-500" /></div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2 font-headline">
               Payment Successful!
             </h1>
@@ -150,19 +151,19 @@ export default function ConfirmationPage({
           >
             <div className="space-y-3">
               <div className="flex items-center">
-                <span className="text-green-600 text-xl mr-3">✓</span>
+                <Check size={18} className="text-green-600 mr-3 shrink-0" />
                 <span className="text-gray-700">
                   Card created and ready to view
                 </span>
               </div>
               <div className="flex items-center">
-                <span className="text-green-600 text-xl mr-3">✓</span>
+                <Check size={18} className="text-green-600 mr-3 shrink-0" />
                 <span className="text-gray-700">
                   Emails sent to all recipients
                 </span>
               </div>
               <div className="flex items-center">
-                <span className="text-green-600 text-xl mr-3">✓</span>
+                <Check size={18} className="text-green-600 mr-3 shrink-0" />
                 <span className="text-gray-700">
                   Link valid for 7 days
                 </span>
@@ -198,7 +199,7 @@ export default function ConfirmationPage({
                   : 'bg-pink-500 text-white hover:bg-pink-600'
               }`}
             >
-              {copied ? '✓ Link Copied!' : 'Copy Link to Clipboard'}
+              {copied ? <span className="inline-flex items-center gap-1"><Check size={16} /> Link Copied!</span> : <span className="inline-flex items-center gap-1"><Copy size={16} /> Copy Link to Clipboard</span>}
             </motion.button>
           </motion.div>
 
@@ -218,7 +219,7 @@ export default function ConfirmationPage({
                 onClick={handleWhatsAppShare}
                 className="flex items-center justify-center gap-2 py-3 px-4 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
               >
-                <span>💬</span>
+                <MessageCircle size={18} />
                 WhatsApp
               </motion.button>
 
@@ -228,7 +229,7 @@ export default function ConfirmationPage({
                 onClick={handleEmailShare}
                 className="flex items-center justify-center gap-2 py-3 px-4 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
               >
-                <span>📧</span>
+                <Mail size={18} />
                 Email
               </motion.button>
 
@@ -252,7 +253,7 @@ export default function ConfirmationPage({
             className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8"
           >
             <p className="text-sm text-blue-800">
-              <strong>💡 What's Next?</strong><br />
+              <strong className="inline-flex items-center gap-1"><Lightbulb size={14} /> What's Next?</strong><br />
               Recipients will receive an email with your card link. They can open it anytime within the next 7 days. You can track when they open it in your dashboard.
             </p>
           </motion.div>
