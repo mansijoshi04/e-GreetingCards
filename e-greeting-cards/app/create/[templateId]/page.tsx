@@ -30,6 +30,7 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
   const [customStyling, setCustomStyling] = useState<Record<string, any>>({
     fontSize: 20,
     textColor: '#333333',
+    headlineColor: '',   // empty = use template default
     backgroundTheme: 0,
   });
   const [saving, setSaving] = useState(false);
@@ -160,7 +161,7 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
                 : 'bg-stone-200 text-stone-500 cursor-not-allowed'
             }`}
           >
-            {saving ? 'Saving...' : 'Next: Recipients →'}
+            {saving ? 'Saving...' : 'Preview Card →'}
           </motion.button>
         </div>
       </div>
@@ -195,7 +196,7 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
                     : 'bg-stone-200 text-stone-500 cursor-not-allowed'
                 }`}
               >
-                {saving ? 'Saving...' : 'Next: Recipients'}
+                {saving ? 'Saving...' : 'Preview Card'}
               </motion.button>
             </div>
           </motion.div>
@@ -222,6 +223,8 @@ export default function EditorPage({ params: paramsPromise }: EditorPageProps) {
         return (
           <PreviewModal
             isOpen={showPreview}
+            category={template.category}
+            tier={template.tier}
             onClose={() => setShowPreview(false)}
             onConfirm={handleConfirmPreview}
             design={designConfig}

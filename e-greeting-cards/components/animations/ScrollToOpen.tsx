@@ -15,6 +15,7 @@ interface ScrollToOpenProps {
   cardId: string;
   category?: string;
   tier?: string;
+  isPreview?: boolean;
 }
 
 export default function ScrollToOpen({
@@ -24,6 +25,7 @@ export default function ScrollToOpen({
   cardId,
   category = 'birthday',
   tier = 'basic',
+  isPreview = false,
 }: ScrollToOpenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
@@ -109,22 +111,24 @@ export default function ScrollToOpen({
           </motion.div>
         </div>
 
-        {/* Share buttons (bottom) — shown once card is revealed */}
-        <motion.div
-          className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40 flex-wrap px-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: cardRevealed ? 1 : 0, y: cardRevealed ? 0 : 20 }}
-          transition={{ duration: 0.4 }}
-        >
-          <ShareButton onClick={() => shareCard('copy')} Icon={Copy} label="Copy Link" />
-          <ShareButton onClick={() => shareCard('whatsapp')} Icon={MessageCircle} label="WhatsApp" />
-          <ShareButton onClick={() => shareCard('email')} Icon={Mail} label="Email" />
-          <ShareButton
-            onClick={() => downloadCardAsPng('.card-content-wrapper')}
-            Icon={Download}
-            label="Download"
-          />
-        </motion.div>
+        {/* Share buttons — hidden in preview mode */}
+        {!isPreview && (
+          <motion.div
+            className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40 flex-wrap px-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: cardRevealed ? 1 : 0, y: cardRevealed ? 0 : 20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <ShareButton onClick={() => shareCard('copy')} Icon={Copy} label="Copy Link" />
+            <ShareButton onClick={() => shareCard('whatsapp')} Icon={MessageCircle} label="WhatsApp" />
+            <ShareButton onClick={() => shareCard('email')} Icon={Mail} label="Email" />
+            <ShareButton
+              onClick={() => downloadCardAsPng('.card-content-wrapper')}
+              Icon={Download}
+              label="Download"
+            />
+          </motion.div>
+        )}
       </div>
     </div>
   );

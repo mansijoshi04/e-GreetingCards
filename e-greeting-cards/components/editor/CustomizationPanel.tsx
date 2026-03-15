@@ -4,6 +4,33 @@ import { motion } from 'framer-motion';
 import { Template } from '@prisma/client';
 import { Lightbulb } from 'lucide-react';
 
+/** Circular dashed color picker trigger — hides the native input under a styled circle */
+function ColorPicker({
+  value,
+  onChange,
+  title,
+}: {
+  value: string;
+  onChange: (hex: string) => void;
+  title?: string;
+}) {
+  return (
+    <label className="relative cursor-pointer shrink-0" title={title}>
+      {/* Visible circle */}
+      <div className="w-9 h-9 rounded-full border-2 border-dashed border-stone-400 p-0.5 hover:border-stone-600 transition-colors">
+        <div className="w-full h-full rounded-full" style={{ backgroundColor: value }} />
+      </div>
+      {/* Invisible native input layered on top */}
+      <input
+        type="color"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      />
+    </label>
+  );
+}
+
 interface CustomizationPanelProps {
   template: Template;
   customText: Record<string, string>;
@@ -19,7 +46,12 @@ export default function CustomizationPanel({
   customStyling,
   setCustomStyling,
 }: CustomizationPanelProps) {
-  const designConfig = template.designConfig as any;
+  let designConfig: any = {};
+  try { designConfig = JSON.parse(template.designConfig as string); } catch {}
+
+  // Default headline color from template
+  const defaultHeadlineColor =
+    designConfig?.elements?.find((e: any) => e.id === 'headline')?.style?.color || '#FF6B9D';
 
   const colorThemes: Record<string, Record<string, string[]>> = {
     birthday: {
@@ -49,9 +81,8 @@ export default function CustomizationPanel({
   };
 
   const quickTextColors = ['#1c1917', '#f43f5e', '#334155', '#059669', '#7c3aed', '#d97706'];
-  const quickBgPresets = Object.entries(colors);
-
   const colors = colorThemes[template.category] || colorThemes['birthday'];
+  const quickBgPresets = Object.entries(colors);
 
   const handleTextChange = (field: string, value: string) => {
     setCustomText({
@@ -68,10 +99,11 @@ export default function CustomizationPanel({
   };
 
   const handleTextColorChange = (hex: string) => {
-    setCustomStyling({
-      ...customStyling,
-      textColor: hex,
-    });
+    setCustomStyling({ ...customStyling, textColor: hex });
+  };
+
+  const handleHeadlineColorChange = (hex: string) => {
+    setCustomStyling({ ...customStyling, headlineColor: hex });
   };
 
   const handleGradientColorChange = (index: 0 | 1, hex: string) => {
@@ -210,36 +242,61 @@ export default function CustomizationPanel({
         </div>
       </motion.div>
 
-      {/* Text Color */}
+      {/* Headline Color */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
         <label className="block text-xs uppercase tracking-widest text-stone-500 font-semibold mb-3">
+          Headline Color
+        </label>
+        <div className="flex items-center gap-2 flex-wrap">
+          <ColorPicker
+            value={customStyling.headlineColor || defaultHeadlineColor}
+            onChange={handleHeadlineColorChange}
+            title="Pick headline color"
+          />
+          {quickTextColors.map((hex) => (
+            <button
+              key={hex}
+              onClick={() => handleHeadlineColorChange(hex)}
+              className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                customStyling.headlineColor === hex ? 'border-rose-500 scale-110' : 'border-stone-200'
+              }`}
+              style={{ backgroundColor: hex }}
+              title={hex}
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Message Color */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.32 }}
+      >
+        <label className="block text-xs uppercase tracking-widest text-stone-500 font-semibold mb-3">
           Message Color
         </label>
-        <div className="flex items-center gap-3">
-          <input
-            type="color"
+        <div className="flex items-center gap-2 flex-wrap">
+          <ColorPicker
             value={customStyling.textColor || '#333333'}
-            onChange={(e) => handleTextColorChange(e.target.value)}
-            className="w-10 h-10 rounded-lg border border-stone-200 cursor-pointer p-0.5 bg-white"
-            title="Pick any text color"
+            onChange={handleTextColorChange}
+            title="Pick message color"
           />
-          <div className="flex gap-2">
-            {quickTextColors.map((hex) => (
-              <button
-                key={hex}
-                onClick={() => handleTextColorChange(hex)}
-                className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
-                  customStyling.textColor === hex ? 'border-rose-500 scale-110' : 'border-stone-200'
-                }`}
-                style={{ backgroundColor: hex }}
-                title={hex}
-              />
-            ))}
-          </div>
+          {quickTextColors.map((hex) => (
+            <button
+              key={hex}
+              onClick={() => handleTextColorChange(hex)}
+              className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
+                customStyling.textColor === hex ? 'border-rose-500 scale-110' : 'border-stone-200'
+              }`}
+              style={{ backgroundColor: hex }}
+              title={hex}
+            />
+          ))}
         </div>
       </motion.div>
 
@@ -256,19 +313,15 @@ export default function CustomizationPanel({
         {/* Custom gradient pickers */}
         <div className="flex items-center gap-3 mb-3">
           <div className="flex items-center gap-2">
-            <input
-              type="color"
+            <ColorPicker
               value={(customStyling.backgroundValue || Object.values(colors)[0])[0] || '#ffffff'}
-              onChange={(e) => handleGradientColorChange(0, e.target.value)}
-              className="w-10 h-10 rounded-lg border border-stone-200 cursor-pointer p-0.5 bg-white"
+              onChange={(hex) => handleGradientColorChange(0, hex)}
               title="Gradient start color"
             />
             <span className="text-xs text-stone-400">→</span>
-            <input
-              type="color"
+            <ColorPicker
               value={(customStyling.backgroundValue || Object.values(colors)[0])[1] || '#f5f5f5'}
-              onChange={(e) => handleGradientColorChange(1, e.target.value)}
-              className="w-10 h-10 rounded-lg border border-stone-200 cursor-pointer p-0.5 bg-white"
+              onChange={(hex) => handleGradientColorChange(1, hex)}
               title="Gradient end color"
             />
           </div>

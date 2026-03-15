@@ -15,6 +15,7 @@ interface ClickToRevealProps {
   cardId: string;
   category?: string;
   tier?: string;
+  isPreview?: boolean;
 }
 
 export default function ClickToReveal({
@@ -24,6 +25,7 @@ export default function ClickToReveal({
   cardId,
   category = 'birthday',
   tier = 'basic',
+  isPreview = false,
 }: ClickToRevealProps) {
   const [isRevealed, setIsRevealed] = useState(false);
   const confettiConfig = design.animations?.confetti || {};
@@ -108,27 +110,29 @@ export default function ClickToReveal({
         </div>
       </motion.div>
 
-      {/* Share buttons */}
-      <AnimatePresence>
-        {isRevealed && (
-          <motion.div
-            className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40 flex-wrap px-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ delay: 0.5 }}
-          >
-            <ShareButton onClick={() => shareCard('copy')} Icon={Copy} label="Copy Link" />
-            <ShareButton onClick={() => shareCard('whatsapp')} Icon={MessageCircle} label="WhatsApp" />
-            <ShareButton onClick={() => shareCard('email')} Icon={Mail} label="Email" />
-            <ShareButton
-              onClick={() => downloadCardAsPng('.click-to-reveal-card')}
-              Icon={Download}
-              label="Download"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Share buttons — hidden in preview mode */}
+      {!isPreview && (
+        <AnimatePresence>
+          {isRevealed && (
+            <motion.div
+              className="absolute bottom-10 left-0 right-0 flex gap-4 justify-center z-40 flex-wrap px-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: 0.5 }}
+            >
+              <ShareButton onClick={() => shareCard('copy')} Icon={Copy} label="Copy Link" />
+              <ShareButton onClick={() => shareCard('whatsapp')} Icon={MessageCircle} label="WhatsApp" />
+              <ShareButton onClick={() => shareCard('email')} Icon={Mail} label="Email" />
+              <ShareButton
+                onClick={() => downloadCardAsPng('.click-to-reveal-card')}
+                Icon={Download}
+                label="Download"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
 
       {/* Confetti effect */}
       {confettiConfig.enabled && isRevealed && (

@@ -34,6 +34,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
   const bodyTextColor = styling?.textColor
     ? textColorMap[styling.textColor] || styling.textColor
     : null;
+  const headlineTextColor = styling?.headlineColor || null;
 
   // User's font size override for body text
   const bodyFontSize = styling?.fontSize ? `${styling.fontSize}px` : null;
@@ -88,7 +89,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
               fontSize: headline.style?.fontSize || '40px',
               fontFamily: headline.style?.fontFamily || 'Georgia, serif',
               fontWeight: headline.style?.fontWeight || '700',
-              color: headline.style?.color || '#333333',
+              color: headlineTextColor || headline.style?.color || '#333333',
               lineHeight: '1.2',
             }}
           >

@@ -33,8 +33,8 @@ export default function CardPreview({
   const bodyElement = designConfigTyped.elements?.[1];
   const signatureElement = designConfigTyped.elements?.[2];
 
-  const headlineColor = headlineElement?.style?.color || '#FF6B9D';
-  // customStyling.textColor (hex) overrides template default for body + signature
+  // customStyling overrides take precedence over template defaults
+  const headlineColor = customStyling.headlineColor || headlineElement?.style?.color || '#FF6B9D';
   const bodyColor = customStyling.textColor || bodyElement?.style?.color || '#333333';
   const signatureColor = customStyling.textColor || signatureElement?.style?.color || '#666666';
 
