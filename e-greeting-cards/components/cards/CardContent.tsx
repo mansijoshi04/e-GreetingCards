@@ -58,7 +58,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
   return (
     <div
       className="relative w-full rounded-2xl overflow-hidden flex flex-col items-center justify-between p-8"
-      style={{ ...backgroundStyle, minHeight: '480px' }}
+      style={{ ...backgroundStyle, minHeight: '480px', aspectRatio: '3/4' }}
     >
       {/* Illustrated background layer */}
       {visualTheme && (

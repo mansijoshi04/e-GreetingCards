@@ -13,8 +13,9 @@ interface ConfettiLayerProps {
     duration?: number;
   };
   cardId: string;
-  category?: string; // birthday, anniversary, graduation, etc.
-  tier?: string; // basic, premium
+  category?: string;
+  tier?: string;
+  visualTheme?: string;
 }
 
 // Color palettes for each category
@@ -27,16 +28,16 @@ const categoryColorPalettes: Record<string, string[]> = {
 };
 
 // Create shape drawing functions
-function createShapeDrawer(shapeType: 'petal' | 'star' | 'confetti') {
+function createShapeDrawer(shapeType: 'petal' | 'star' | 'confetti' | 'heart') {
   return (ctx: CanvasRenderingContext2D) => {
     switch (shapeType) {
-      case 'petal': // Rose petal - soft oval
+      case 'petal':
         ctx.beginPath();
         ctx.ellipse(0, 0, 6, 10, Math.PI / 4, 0, 2 * Math.PI);
         ctx.fill();
         break;
 
-      case 'star': // 5-point star for graduation
+      case 'star':
         ctx.beginPath();
         for (let i = 0; i < 5; i++) {
           const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
@@ -49,7 +50,17 @@ function createShapeDrawer(shapeType: 'petal' | 'star' | 'confetti') {
         ctx.fill();
         break;
 
-      case 'confetti': // Default square/rectangle
+      case 'heart':
+        ctx.beginPath();
+        ctx.moveTo(0, -2);
+        ctx.bezierCurveTo(-4, -7, -10, -7, -10, -2);
+        ctx.bezierCurveTo(-10, 3, 0, 9, 0, 9);
+        ctx.bezierCurveTo(0, 9, 10, 3, 10, -2);
+        ctx.bezierCurveTo(10, -7, 4, -7, 0, -2);
+        ctx.fill();
+        break;
+
+      case 'confetti':
       default:
         ctx.fillRect(-3, -3, 6, 6);
         break;
@@ -57,15 +68,13 @@ function createShapeDrawer(shapeType: 'petal' | 'star' | 'confetti') {
   };
 }
 
-// Get shape type based on category
-function getShapeTypeForCategory(category?: string): 'petal' | 'star' | 'confetti' {
+// Get shape type based on visualTheme or category
+function getShapeType(category?: string, visualTheme?: string): 'petal' | 'star' | 'confetti' | 'heart' {
+  if (visualTheme === 'heart-float') return 'heart';
   switch (category?.toLowerCase()) {
-    case 'anniversary':
-      return 'petal';
-    case 'graduation':
-      return 'star';
-    default:
-      return 'confetti';
+    case 'anniversary': return 'petal';
+    case 'graduation':  return 'star';
+    default:            return 'confetti';
   }
 }
 
@@ -75,6 +84,7 @@ export default function ConfettiLayer({
   cardId,
   category = 'birthday',
   tier = 'basic',
+  visualTheme,
 }: ConfettiLayerProps) {
   const [isActive, setIsActive] = useState(false);
   const { width, height } = useWindowSize();
@@ -94,7 +104,7 @@ export default function ConfettiLayer({
           '#FF69B4',
         ];
 
-  const shapeType = getShapeTypeForCategory(category);
+  const shapeType = getShapeType(category, visualTheme);
   const drawShape = createShapeDrawer(shapeType);
 
   useEffect(() => {

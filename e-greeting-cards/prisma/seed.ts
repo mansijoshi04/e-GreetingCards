@@ -115,7 +115,7 @@ async function main() {
         version: '1.0',
         animations: {
           entrance: 'fade-in-scale',
-          scrollTrigger: 'envelope-open',
+          scrollTrigger: 'click-to-reveal',
           confetti: {
             enabled: true,
             colors: ['#C84B6E', '#FFB6C1', '#D4AF37'],
