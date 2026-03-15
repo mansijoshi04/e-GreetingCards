@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight } from 'lucide-react';
 import ScrollToOpen from '@/components/animations/ScrollToOpen';
@@ -38,6 +38,7 @@ export default function PreviewModal({
   }, [isOpen]);
 
   const animationType = design?.animations?.scrollTrigger || 'auto-play';
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const hint =
     animationType === 'envelope-open' || animationType === 'scroll-to-open'
@@ -82,7 +83,7 @@ export default function PreviewModal({
           </div>
 
           {/* Animation area — scrollable so scroll-to-open works */}
-          <div className="flex-1 overflow-y-auto">
+          <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
             {(animationType === 'envelope-open' || animationType === 'scroll-to-open') && (
               <ScrollToOpen
                 content={customText}
@@ -92,6 +93,7 @@ export default function PreviewModal({
                 category={category}
                 tier={tier}
                 isPreview
+                scrollContainer={scrollContainerRef}
               />
             )}
 

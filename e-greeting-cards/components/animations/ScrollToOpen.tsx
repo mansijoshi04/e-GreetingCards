@@ -16,6 +16,8 @@ interface ScrollToOpenProps {
   category?: string;
   tier?: string;
   isPreview?: boolean;
+  /** Pass a ref to the scrollable container when used inside a modal */
+  scrollContainer?: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function ScrollToOpen({
@@ -26,6 +28,7 @@ export default function ScrollToOpen({
   category = 'birthday',
   tier = 'basic',
   isPreview = false,
+  scrollContainer,
 }: ScrollToOpenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
@@ -33,6 +36,7 @@ export default function ScrollToOpen({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
+    container: scrollContainer,
     offset: ['start start', 'end start'],
   });
 
@@ -60,8 +64,8 @@ export default function ScrollToOpen({
 
   return (
     <div ref={containerRef} className="h-[200vh] relative">
-      {/* Sticky container for envelope and card */}
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50">
+      {/* Sticky container for envelope and card — h-screen works for both window and modal */}
+      <div className="sticky top-0 h-[100dvh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50">
         {/* Envelope body (static background) */}
         <div className="absolute w-96 h-64 bg-gradient-to-br from-red-100 to-red-200 rounded-lg shadow-2xl z-10" />
 
