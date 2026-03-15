@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import CardDecorations from '@/components/cards/CardDecorations';
 
 interface CardContentProps {
   content: Record<string, string>;
@@ -11,17 +12,21 @@ interface CardContentProps {
 export default function CardContent({ content, design, styling = {} }: CardContentProps) {
   const elements = design?.elements || [];
   const layout = design?.layout || {};
+  const visualTheme: string | undefined = layout.visualTheme;
 
   // User's custom background overrides template default
+  // Skip CSS background when visualTheme provides it via SVG illustration
   const bgColors: string[] = styling?.backgroundValue || layout.backgroundValue || [];
 
   const backgroundStyle: React.CSSProperties = {};
-  if (bgColors.length >= 2) {
-    backgroundStyle.background = `linear-gradient(to bottom right, ${bgColors[0]}, ${bgColors[1]})`;
-  } else if (bgColors.length === 1) {
-    backgroundStyle.backgroundColor = bgColors[0];
-  } else if (layout.backgroundType === 'solid' && layout.backgroundValue) {
-    backgroundStyle.backgroundColor = layout.backgroundValue[0] || layout.backgroundValue;
+  if (!visualTheme) {
+    if (bgColors.length >= 2) {
+      backgroundStyle.background = `linear-gradient(to bottom right, ${bgColors[0]}, ${bgColors[1]})`;
+    } else if (bgColors.length === 1) {
+      backgroundStyle.backgroundColor = bgColors[0];
+    } else if (layout.backgroundType === 'solid' && layout.backgroundValue) {
+      backgroundStyle.backgroundColor = layout.backgroundValue[0] || layout.backgroundValue;
+    }
   }
 
   // User's text color override — stored as hex (legacy Tailwind names also supported)
@@ -55,13 +60,20 @@ export default function CardContent({ content, design, styling = {} }: CardConte
       className="relative w-full rounded-2xl overflow-hidden flex flex-col items-center justify-between p-8"
       style={{ ...backgroundStyle, minHeight: '480px' }}
     >
+      {/* Illustrated background layer */}
+      {visualTheme && (
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <CardDecorations theme={visualTheme} />
+        </div>
+      )}
+
       {/* Recipient name (optional) */}
       {content['recipientName'] && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-          className="w-full text-left pl-2 mt-2"
+          className="relative z-10 w-full text-left pl-2 mt-2"
         >
           <p
             style={{
@@ -82,7 +94,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: headline.animations?.entrance?.delay || 0.3, ease: 'easeOut' }}
-          className="w-full text-center mt-4"
+          className="relative z-10 w-full text-center mt-4"
         >
           <p
             style={{
@@ -104,7 +116,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: body.animations?.entrance?.delay || 0.6, ease: 'easeOut' }}
-          className="w-full text-center my-6 px-4"
+          className="relative z-10 w-full text-center my-6 px-4"
         >
           <p
             style={{
@@ -127,7 +139,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: element.animations?.entrance?.delay || 0.5, ease: 'easeOut' }}
-          className="w-full text-center px-4"
+          className="relative z-10 w-full text-center px-4"
         >
           <p
             style={{
@@ -147,7 +159,7 @@ export default function CardContent({ content, design, styling = {} }: CardConte
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: signature.animations?.entrance?.delay || 0.9, ease: 'easeOut' }}
-          className="w-full text-right pr-4 mb-2"
+          className="relative z-10 w-full text-right pr-4 mb-2"
         >
           <p
             style={{
