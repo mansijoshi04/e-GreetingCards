@@ -29,4 +29,4 @@ coverage/
 .nyc_output/
 
 # Prisma
-prisma/migrations/
+# prisma/migrations/ — must be committed so prisma migrate deploy works on VPS
