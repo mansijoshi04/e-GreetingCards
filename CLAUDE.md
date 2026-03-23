@@ -18,7 +18,6 @@ An interactive web-based greeting card platform where users can create, customiz
 ### Key Features
 - Multi-recipient support (up to 15 people per card)
 - 7-day link expiry (creates sense of occasion)
-- Track when recipients open cards
 - Share via email or messaging (WhatsApp, SMS)
 - Mobile-optimized (most cards opened on phones)
 
@@ -44,20 +43,25 @@ An interactive web-based greeting card platform where users can create, customiz
 - **Next.js API Routes** (serverless functions)
 - **PostgreSQL** (relational data: cards, recipients, templates)
 - **Redis** (link expiry management, caching)
-- **Vercel** (hosting, edge functions)
+- **Hostinger VPS** (hosting — Docker Compose, Nginx reverse proxy)
 
 **Third-Party Services**
-- **Stripe** (payment processing)
-- **SendGrid/AWS SES** (email delivery)
-- **AWS S3/Cloudinary** (image/design asset storage)
+- **Paddle** (payment processing — migrated from Stripe)
+- **Resend** (email delivery — free tier, 3k emails/month)
+- **AWS S3/Cloudinary** (image/design asset storage — future)
 
 ### Why These Choices?
 
 **Next.js over separate backend:**
 - Simpler deployment (single codebase)
 - Better SEO for card previews (important for sharing)
-- Edge functions for fast global delivery
 - Built-in API routes eliminate separate Express server
+
+**VPS + Docker over Vercel/serverless:**
+- Full control over Postgres and Redis (no managed service costs)
+- Same Docker Compose stack locally and in production — no environment surprises
+- Hostinger VPS already hosts other apps (mansijoshi.ca, resumekickstarter.com, penpond.com)
+- Nginx handles routing and SSL (Certbot/Let's Encrypt)
 
 **PostgreSQL over NoSQL:**
 - Relational data (cards → recipients, templates → cards)
@@ -1087,11 +1091,12 @@ const typography = {
 | **Rendering** | HTML/CSS (not Canvas) | Responsive, accessible, SEO-friendly |
 | **Animations** | Framer Motion | Best React integration, smooth scroll handling |
 | **Link Expiry** | Redis + PostgreSQL | Fast lookups, reliable persistence |
-| **Payments** | Stripe | Industry standard, great DX |
-| **Email** | SendGrid | High deliverability, transactional focus |
-| **Hosting** | Vercel | Zero-config Next.js, edge functions |
-| **Image Storage** | Cloudinary | CDN delivery, automatic optimization |
-| **Database** | PostgreSQL (Vercel Postgres) | Relational data, ACID compliance |
+| **Payments** | Paddle | Simpler tax/VAT handling than Stripe for digital goods |
+| **Email** | Resend | Free up to 3k/month, simple API, great deliverability |
+| **Hosting** | Hostinger VPS + Docker | Same stack as local dev, existing VPS already in use |
+| **Reverse Proxy** | Nginx + Certbot | Auto-renewing SSL, consistent with other apps on VPS |
+| **Image Storage** | Cloudinary (future) | CDN delivery, automatic optimization |
+| **Database** | PostgreSQL (Docker) | Relational data, ACID compliance, runs in same compose stack |
 
 ---
 
@@ -1111,8 +1116,7 @@ const typography = {
 **For Senders:**
 - Customization is easy (< 2 minutes)
 - Preview looks exactly like final card
-- Payment is quick (Stripe Link, Apple Pay)
-- Can track when recipients open
+- Payment is quick via Paddle checkout
 
 **For Recipients:**
 - Animations feel special (not generic)
@@ -1162,10 +1166,37 @@ const typography = {
    - Build checkout flow
    - Handle webhooks
 
-5. **Deploy MVP**
-   - Deploy to Vercel
-   - Test full flow
-   - Gather feedback
+5. **Deploy to VPS**
+   - SSH into Hostinger VPS
+   - Clone repo, create `.env`, run `docker compose -f docker-compose.prod.yml up -d --build`
+   - Configure Nginx + Certbot SSL
+   - See `docs/DEPLOYMENT.md` for full walkthrough
+
+---
+
+## Current State (March 2026)
+
+- **E2E flow working locally** via Docker Compose (template → customize → pay → email → view card)
+- **Payment**: Paddle sandbox integrated and tested
+- **Email**: Resend integrated (`emailService.ts`), Mailgun commented out for reference
+- **Animations**: ScrollToOpen (envelope), ClickToReveal (cover fade), confetti, theme-aware cover screens
+- **Templates**: 3 templates seeded (birthday, anniversary, graduation)
+- **Deployment**: Staging (`staging.giflove.ca`) being set up on Hostinger VPS
+- **CI/CD**: GitHub Actions workflows ready (`ci.yml`, `deploy-staging.yml`, `deploy-production.yml`)
+
+### Deployment Docs
+- `docs/DNS_SETUP.md` — GoDaddy DNS records (Resend + staging/prod A records)
+- `docs/DEPLOYMENT.md` — Step-by-step VPS deployment for staging and production
+- `docs/CICD.md` — GitHub Actions setup, SSH keys, sudoers, branch strategy
+- `docs/phase_4_plan.md` — Phase 4 overview and order of operations
+
+### Key File Locations
+- `lib/services/emailService.ts` — Resend provider (Mailgun commented out)
+- `lib/services/paymentService.ts` — Paddle integration
+- `docker-compose.yml` — Local dev (hot reload, `prisma db push`)
+- `docker-compose.prod.yml` — VPS production (built image, `prisma migrate deploy`)
+- `nginx/conf.d/` — Proxy configs managed by CI/CD
+- `nginx/staging.giflove.ca` + `nginx/giflove.ca` — Initial site configs (set up once, Certbot manages after)
 
 ---
 
