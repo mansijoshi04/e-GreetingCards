@@ -12,6 +12,12 @@ COPY package.json ./
 # Install dependencies
 RUN npm install --omit=optional
 
+# Build-time env vars for NEXT_PUBLIC_* (baked into the JS bundle by Next.js)
+ARG NEXT_PUBLIC_PADDLE_CLIENT_TOKEN
+ARG NEXT_PUBLIC_PADDLE_ENVIRONMENT=sandbox
+ENV NEXT_PUBLIC_PADDLE_CLIENT_TOKEN=$NEXT_PUBLIC_PADDLE_CLIENT_TOKEN
+ENV NEXT_PUBLIC_PADDLE_ENVIRONMENT=$NEXT_PUBLIC_PADDLE_ENVIRONMENT
+
 # Copy source code
 COPY . .
 
