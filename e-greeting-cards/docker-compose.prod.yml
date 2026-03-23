@@ -1,0 +1,86 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: greeting-cards-db-prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-greeting_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-greeting_password}
+      POSTGRES_DB: ${POSTGRES_DB:-greeting_cards}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-greeting_user} -d ${POSTGRES_DB:-greeting_cards}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - greeting-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: greeting-cards-redis-prod
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - greeting-network
+
+  # Next.js Application (production build via Dockerfile)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: greeting-cards-app-prod
+    ports:
+      - "127.0.0.1:${APP_PORT:-3040}:3000"
+    environment:
+      # Database
+      DATABASE_URL: postgresql://${POSTGRES_USER:-greeting_user}:${POSTGRES_PASSWORD:-greeting_password}@postgres:5432/${POSTGRES_DB:-greeting_cards}
+
+      # Redis
+      REDIS_URL: redis://redis:6379
+
+      # App
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+      NODE_ENV: production
+
+      # Paddle
+      PADDLE_API_KEY: ${PADDLE_API_KEY}
+      PADDLE_WEBHOOK_SECRET: ${PADDLE_WEBHOOK_SECRET}
+      PADDLE_ENVIRONMENT: ${PADDLE_ENVIRONMENT:-sandbox}
+      PADDLE_BASIC_PRICE_ID: ${PADDLE_BASIC_PRICE_ID}
+      PADDLE_PREMIUM_PRICE_ID: ${PADDLE_PREMIUM_PRICE_ID}
+      NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: ${NEXT_PUBLIC_PADDLE_CLIENT_TOKEN}
+
+      # Email
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-cards@giflove.ca}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    networks:
+      - greeting-network
+
+    # Runs migrations before starting — migrate deploy is idempotent (safe to run on every restart)
+    command: sh -c "npx prisma migrate deploy && npm start"
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  greeting-network:
+    driver: bridge

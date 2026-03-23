@@ -6,7 +6,7 @@ import CardContent from '@/components/cards/CardContent';
 import ConfettiLayer from '@/components/cards/ConfettiLayer';
 import ShareButton from '@/components/ui/ShareButton';
 import { shareCard, downloadCardAsPng } from '@/lib/utils/cardUtils';
-import { Copy, MessageCircle, Mail, Download } from 'lucide-react';
+import { Copy, MessageCircle, Mail, Download, Heart, PartyPopper, Cake, GraduationCap, Wind, Flower2, ArrowDown } from 'lucide-react';
 
 interface ClickToRevealProps {
   content: Record<string, string>;
@@ -33,8 +33,17 @@ export default function ClickToReveal({
 
   const handleReveal = () => setIsRevealed(true);
 
+  // Persistent background that matches the cover so nothing shows through after reveal
+  const themeBackground: Record<string, string> = {
+    'heart-float':      'linear-gradient(135deg, #2a0020 0%, #600030 100%)',
+    'cake-celebration': 'linear-gradient(135deg, #0d0b1a 0%, #1e1540 100%)',
+    'cap-toss':         'linear-gradient(135deg, #080820 0%, #121858 100%)',
+    'rose-petals':      'linear-gradient(135deg, #2a000e 0%, #6b1030 100%)',
+  };
+  const revealedBg = themeBackground[visualTheme] || 'linear-gradient(135deg, #fce7f3 0%, #ede9fe 100%)';
+
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: revealedBg }}>
       {/* Cover — theme-aware pre-reveal screen */}
       <AnimatePresence>
         {!isRevealed && (
@@ -108,15 +117,17 @@ function DefaultCover({ onReveal }: { onReveal: () => void }) {
       onClick={onReveal}
     >
       <div className="text-center text-white px-6">
-        <motion.p className="text-5xl mb-4" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.1 }}>🎉</motion.p>
+        <motion.div className="flex justify-center mb-4" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.1 }}>
+          <PartyPopper size={56} strokeWidth={1.5} />
+        </motion.div>
         <motion.h2 className="text-3xl md:text-4xl font-bold mb-3" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
           You've got a card!
         </motion.h2>
         <motion.p className="text-lg md:text-xl" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
           Tap anywhere to open
         </motion.p>
-        <motion.div className="mt-6" animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
-          <p className="text-3xl">↓</p>
+        <motion.div className="mt-6 flex justify-center" animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+          <ArrowDown size={28} />
         </motion.div>
       </div>
     </div>
@@ -147,18 +158,20 @@ function HeartFloatCover({ onReveal }: { onReveal: () => void }) {
         <motion.div
           key={i}
           className="absolute bottom-0 text-rose-400 select-none pointer-events-none"
-          style={{ left: h.x, fontSize: h.size }}
+          style={{ left: h.x }}
           initial={{ y: '100%', opacity: 0.7 }}
           animate={{ y: '-120vh', opacity: [0.7, 0.9, 0.7, 0] }}
           transition={{ duration: h.duration, delay: h.delay, repeat: Infinity, ease: 'easeInOut' }}
         >
-          ❤️
+          <Heart size={h.size} fill="currentColor" strokeWidth={0} />
         </motion.div>
       ))}
 
       {/* Center content */}
       <div className="text-center text-white px-6 relative z-10">
-        <motion.p className="text-5xl mb-4" initial={{ scale: 0 }} animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>💕</motion.p>
+        <motion.div className="flex justify-center mb-4" initial={{ scale: 0 }} animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
+          <Heart size={52} fill="#f43f5e" color="#f43f5e" strokeWidth={0} />
+        </motion.div>
         <motion.h2 className="text-3xl md:text-4xl font-bold mb-3" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           You've got a love note!
         </motion.h2>
@@ -200,10 +213,10 @@ function CakeCelebrationCover({ onReveal }: { onReveal: () => void }) {
 
       <div className="text-center text-white px-6 relative z-10">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold mb-2"
+          className="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center gap-2"
           initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
         >
-          🎂 Birthday Surprise!
+          <Cake size={32} strokeWidth={1.5} /> Birthday Surprise!
         </motion.h2>
         <motion.p className="text-lg text-purple-200 mb-8"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
@@ -265,7 +278,7 @@ function CakeCelebrationCover({ onReveal }: { onReveal: () => void }) {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            🌬 Tap to Blow!
+            <Wind size={14} className="inline-block mr-1" /> Tap to Blow!
           </motion.div>
         )}
       </div>
@@ -297,15 +310,15 @@ function CapTossCover({ onReveal }: { onReveal: () => void }) {
 
       <div className="text-center text-white px-6 relative z-10">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold mb-2"
+          className="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center gap-2"
           initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
         >
-          🎓 Congratulations!
+          <GraduationCap size={32} strokeWidth={1.5} /> Congratulations!
         </motion.h2>
         <motion.p className="text-lg text-blue-200 mb-8"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
         >
-          {tossed ? 'Cap in the air! 🎉' : 'Tap to toss your cap!'}
+          {tossed ? 'Cap in the air!' : 'Tap to toss your cap!'}
         </motion.p>
 
         {/* Graduation cap */}
@@ -338,7 +351,7 @@ function CapTossCover({ onReveal }: { onReveal: () => void }) {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            🎓 Toss it!
+            <GraduationCap size={14} className="inline-block mr-1" /> Toss it!
           </motion.div>
         )}
       </div>
@@ -369,18 +382,20 @@ function RosePetalsCover({ onReveal }: { onReveal: () => void }) {
       {petals.map((p, i) => (
         <motion.div
           key={i}
-          className="absolute top-0 select-none pointer-events-none"
-          style={{ left: p.x, fontSize: p.size, rotate: p.rot }}
+          className="absolute top-0 text-rose-300 select-none pointer-events-none"
+          style={{ left: p.x, rotate: p.rot }}
           initial={{ y: '-10%', opacity: 0.8, x: 0 }}
           animate={{ y: '110vh', opacity: [0.8, 0.9, 0.6, 0], x: [0, 20, -15, 10, 0] }}
           transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'linear' }}
         >
-          🌸
+          <Flower2 size={p.size} fill="currentColor" strokeWidth={0.5} />
         </motion.div>
       ))}
 
       <div className="text-center text-white px-6 relative z-10">
-        <motion.p className="text-5xl mb-4" initial={{ scale: 0 }} animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>🌹</motion.p>
+        <motion.div className="flex justify-center mb-4" initial={{ scale: 0 }} animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+          <Flower2 size={52} color="#f43f5e" strokeWidth={1.5} />
+        </motion.div>
         <motion.h2 className="text-3xl md:text-4xl font-bold mb-3" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           A special card for you
         </motion.h2>

@@ -3,18 +3,18 @@
 import { useRouter } from 'next/navigation';
 import { Template } from '@prisma/client';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ArrowDown, MousePointerClick, Play } from 'lucide-react';
 import CardDecorations from '@/components/cards/CardDecorations';
 
 interface TemplateCardProps {
   template: Template;
 }
 
-const ANIMATION_LABELS: Record<string, string> = {
-  'envelope-open':  '↓ Scroll to open',
-  'scroll-to-open': '↓ Scroll to open',
-  'click-to-reveal': '👆 Click to reveal',
-  'auto-play':       '✨ Auto-plays',
+const ANIMATION_TYPES: Record<string, { Icon: React.ElementType; label: string }> = {
+  'envelope-open':   { Icon: ArrowDown,           label: 'Scroll to open' },
+  'scroll-to-open':  { Icon: ArrowDown,           label: 'Scroll to open' },
+  'click-to-reveal': { Icon: MousePointerClick,   label: 'Click to reveal' },
+  'auto-play':       { Icon: Play,                label: 'Auto-plays' },
 };
 
 export default function TemplateCard({ template }: TemplateCardProps) {
@@ -29,7 +29,8 @@ export default function TemplateCard({ template }: TemplateCardProps) {
 
   const visualTheme: string | undefined = designConfig?.layout?.visualTheme;
   const animationType: string = designConfig?.animations?.scrollTrigger || 'auto-play';
-  const animationLabel = ANIMATION_LABELS[animationType] || ANIMATION_LABELS['auto-play'];
+  const animationMeta = ANIMATION_TYPES[animationType] || ANIMATION_TYPES['auto-play'];
+  const AnimIcon = animationMeta.Icon;
 
   const bgColors: string[] = designConfig?.layout?.backgroundValue || [];
   const bgGradient =
@@ -76,8 +77,9 @@ export default function TemplateCard({ template }: TemplateCardProps) {
         </motion.div>
 
         {/* Animation type badge */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-medium bg-black/40 text-white backdrop-blur-sm z-10 whitespace-nowrap">
-          {animationLabel}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-medium bg-black/40 text-white backdrop-blur-sm z-10 whitespace-nowrap flex items-center gap-1.5">
+          <AnimIcon size={11} />
+          {animationMeta.label}
         </div>
 
         {/* Headline text overlay */}

@@ -11,16 +11,21 @@ export interface SendCardEmailParams {
  * Send a card link via email.
  * Behaviour is controlled by EMAIL_PROVIDER env var:
  *   console  → pretty-print to stdout (development default)
- *   mailgun  → send via Mailgun REST API (production)
+ *   resend   → send via Resend REST API (production)
+ *   mailgun  → send via Mailgun REST API (commented out, kept for reference)
  */
 export async function sendCardEmail(
   params: SendCardEmailParams
 ): Promise<boolean> {
   const provider = process.env.EMAIL_PROVIDER || 'console';
 
-  if (provider === 'mailgun') {
-    return sendViaMailgun(params);
+  if (provider === 'resend') {
+    return sendViaResend(params);
   }
+
+  // if (provider === 'mailgun') {
+  //   return sendViaMailgun(params);
+  // }
 
   return printToConsole(params);
 }
@@ -82,19 +87,17 @@ function printToConsole(params: SendCardEmailParams): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Mailgun provider (production)
+// Resend provider (production)
 // ---------------------------------------------------------------------------
 
-async function sendViaMailgun(params: SendCardEmailParams): Promise<boolean> {
+async function sendViaResend(params: SendCardEmailParams): Promise<boolean> {
   const { recipientEmail, recipientName, cardUrl, senderName, cardCategory, expiresAt } = params;
 
-  const apiKey  = process.env.MAILGUN_API_KEY;
-  const domain  = process.env.MAILGUN_DOMAIN;
-  const from    = process.env.EMAIL_FROM || `cards@${domain}`;
-  const region  = process.env.MAILGUN_REGION || 'us'; // 'us' or 'eu'
+  const apiKey = process.env.RESEND_API_KEY;
+  const from   = process.env.EMAIL_FROM || 'cards@giflove.ca';
 
-  if (!apiKey || !domain) {
-    console.error('[email] MAILGUN_API_KEY or MAILGUN_DOMAIN not set — falling back to console');
+  if (!apiKey) {
+    console.error('[email] RESEND_API_KEY not set — falling back to console');
     return printToConsole(params);
   }
 
@@ -104,40 +107,92 @@ async function sendViaMailgun(params: SendCardEmailParams): Promise<boolean> {
     day: 'numeric',
   });
 
-  const baseUrl = region === 'eu'
-    ? 'https://api.eu.mailgun.net'
-    : 'https://api.mailgun.net';
-
-  const body = new URLSearchParams({
-    from,
-    to: recipientEmail,
-    subject: `${senderName} sent you a ${cardCategory} card! 🎉`,
-    html: generateEmailHTML(senderName, cardCategory, cardUrl, formattedExpiry, recipientName),
-  });
-
   try {
-    const response = await fetch(`${baseUrl}/v3/${domain}/messages`, {
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${Buffer.from(`api:${apiKey}`).toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
       },
-      body: body.toString(),
+      body: JSON.stringify({
+        from,
+        to: recipientEmail,
+        subject: `${senderName} sent you a ${cardCategory} card! 🎉`,
+        html: generateEmailHTML(senderName, cardCategory, cardUrl, formattedExpiry, recipientName),
+      }),
     });
 
     if (!response.ok) {
       const text = await response.text();
-      console.error(`[email] Mailgun error ${response.status}:`, text);
+      console.error(`[email] Resend error ${response.status}:`, text);
       return false;
     }
 
-    console.log(`[email] Sent via Mailgun to ${recipientEmail}`);
+    console.log(`[email] Sent via Resend to ${recipientEmail}`);
     return true;
   } catch (error) {
-    console.error(`[email] Mailgun request failed:`, error);
+    console.error(`[email] Resend request failed:`, error);
     return false;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Mailgun provider — commented out, kept for reference if switching back
+// ---------------------------------------------------------------------------
+
+// async function sendViaMailgun(params: SendCardEmailParams): Promise<boolean> {
+//   const { recipientEmail, recipientName, cardUrl, senderName, cardCategory, expiresAt } = params;
+//
+//   const apiKey  = process.env.MAILGUN_API_KEY;
+//   const domain  = process.env.MAILGUN_DOMAIN;
+//   const from    = process.env.EMAIL_FROM || `cards@${domain}`;
+//   const region  = process.env.MAILGUN_REGION || 'us'; // 'us' or 'eu'
+//
+//   if (!apiKey || !domain) {
+//     console.error('[email] MAILGUN_API_KEY or MAILGUN_DOMAIN not set — falling back to console');
+//     return printToConsole(params);
+//   }
+//
+//   const formattedExpiry = expiresAt.toLocaleDateString('en-US', {
+//     year: 'numeric',
+//     month: 'long',
+//     day: 'numeric',
+//   });
+//
+//   const baseUrl = region === 'eu'
+//     ? 'https://api.eu.mailgun.net'
+//     : 'https://api.mailgun.net';
+//
+//   const body = new URLSearchParams({
+//     from,
+//     to: recipientEmail,
+//     subject: `${senderName} sent you a ${cardCategory} card! 🎉`,
+//     html: generateEmailHTML(senderName, cardCategory, cardUrl, formattedExpiry, recipientName),
+//   });
+//
+//   try {
+//     const response = await fetch(`${baseUrl}/v3/${domain}/messages`, {
+//       method: 'POST',
+//       headers: {
+//         Authorization: `Basic ${Buffer.from(`api:${apiKey}`).toString('base64')}`,
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//       },
+//       body: body.toString(),
+//     });
+//
+//     if (!response.ok) {
+//       const text = await response.text();
+//       console.error(`[email] Mailgun error ${response.status}:`, text);
+//       return false;
+//     }
+//
+//     console.log(`[email] Sent via Mailgun to ${recipientEmail}`);
+//     return true;
+//   } catch (error) {
+//     console.error(`[email] Mailgun request failed:`, error);
+//     return false;
+//   }
+// }
 
 // ---------------------------------------------------------------------------
 // Email HTML template

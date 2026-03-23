@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, staging]
+  push:
+    branches: [main, staging]
+
+jobs:
+  lint-and-build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: e-greeting-cards
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: e-greeting-cards/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          # Stub values so next build doesn't fail on missing env vars.
+          # Real values live only on the VPS — never in CI.
+          DATABASE_URL: postgresql://stub:stub@localhost:5432/stub
+          REDIS_URL: redis://localhost:6379
+          PADDLE_API_KEY: test_stub
+          PADDLE_WEBHOOK_SECRET: ntf_stub
+          PADDLE_ENVIRONMENT: sandbox
+          PADDLE_BASIC_PRICE_ID: pri_stub
+          PADDLE_PREMIUM_PRICE_ID: pri_stub
+          NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: stub
+          BASE_URL: http://localhost:3000
+          EMAIL_PROVIDER: console
+          RESEND_API_KEY: stub
+          EMAIL_FROM: cards@giflove.ca
+          NODE_ENV: production
