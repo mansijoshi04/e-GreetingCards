@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "npx eslint .",
+    "lint": "eslint .",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
@@ -48,6 +48,8 @@
   },
   "devDependencies": {
     "critters": "^0.0.23",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.5.14",
     "ts-node": "^10.9.2"
   },
   "overrides": {
