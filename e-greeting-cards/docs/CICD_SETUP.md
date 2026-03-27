@@ -10,11 +10,11 @@
 
 ### Directory structure on VPS
 
-The repo is cloned at `~/apps/giflove-staging/e-greeting-cards/`. All app files (`docker-compose.prod.yml`, `nginx/`, `app/`, etc.) are directly at this path — there is no extra subdirectory on the VPS.
+The full repo is cloned at `~/apps/giflove-staging/`. The app lives at `~/apps/giflove-staging/e-greeting-cards/` — this is where `docker-compose.prod.yml`, `nginx/`, `app/`, etc. live. The deploy script `cd`s into the app directory and runs everything from there.
 
 ```bash
-cd ~/apps/giflove-staging/e-greeting-cards   # repo root = app root
-git pull origin staging
+cd ~/apps/giflove-staging/e-greeting-cards   # app directory
+git pull origin staging                       # git finds .git at ~/apps/giflove-staging/
 sudo cp nginx/conf.d/giflove-staging.conf /etc/nginx/conf.d/giflove-staging.conf
 docker compose -f docker-compose.prod.yml up -d --build
 ```
@@ -44,7 +44,7 @@ sudo visudo -f /etc/sudoers.d/giflove-deploy
 Paste exactly this:
 
 ```
-mjoshi ALL=(ALL) NOPASSWD: /bin/cp /home/mjoshi/apps/*/e-greeting-cards/e-greeting-cards/nginx/conf.d/* /etc/nginx/conf.d/*
+mjoshi ALL=(ALL) NOPASSWD: /bin/cp /home/mjoshi/apps/*/e-greeting-cards/nginx/conf.d/* /etc/nginx/conf.d/*
 mjoshi ALL=(ALL) NOPASSWD: /usr/sbin/nginx -t
 mjoshi ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx
 ```
