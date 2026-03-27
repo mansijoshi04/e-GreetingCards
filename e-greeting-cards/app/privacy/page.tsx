@@ -45,7 +45,7 @@ export default function PrivacyPage() {
             <p className="text-stone-600 leading-relaxed">
               Cards and their associated content are automatically deleted 7 days after creation. Email addresses
               collected for delivery purposes are not retained beyond the card's expiry period. Payment records
-              are retained as required by law and by Paddle's terms of service.
+              are retained as required by law and by Paddle&apos;s terms of service.
             </p>
           </section>
 
@@ -53,7 +53,7 @@ export default function PrivacyPage() {
             <h2 className="font-serif text-2xl font-bold text-stone-900 mb-4">4. Third-Party Services</h2>
             <p className="text-stone-600 leading-relaxed mb-3">We use the following third-party services:</p>
             <ul className="list-disc list-inside space-y-2 text-stone-600">
-              <li><strong>Paddle</strong> - payment processing. Subject to Paddle's privacy policy.</li>
+              <li><strong>Paddle</strong> - payment processing. Subject to Paddle&apos;s privacy policy.</li>
               <li><strong>Resend</strong> - transactional email delivery.</li>
               <li><strong>Hostinger VPS</strong> - hosting and infrastructure.</li>
             </ul>

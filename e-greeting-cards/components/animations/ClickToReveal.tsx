@@ -121,7 +121,7 @@ function DefaultCover({ onReveal }: { onReveal: () => void }) {
           <PartyPopper size={56} strokeWidth={1.5} />
         </motion.div>
         <motion.h2 className="text-3xl md:text-4xl font-bold mb-3" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
-          You've got a card!
+          You&apos;ve got a card!
         </motion.h2>
         <motion.p className="text-lg md:text-xl" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
           Tap anywhere to open
@@ -173,7 +173,7 @@ function HeartFloatCover({ onReveal }: { onReveal: () => void }) {
           <Heart size={52} fill="#f43f5e" color="#f43f5e" strokeWidth={0} />
         </motion.div>
         <motion.h2 className="text-3xl md:text-4xl font-bold mb-3" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          You've got a love note!
+          You&apos;ve got a love note!
         </motion.h2>
         <motion.p className="text-lg md:text-xl text-pink-200" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           Tap to reveal

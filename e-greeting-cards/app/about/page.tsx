@@ -26,14 +26,14 @@ export default function AboutPage() {
             the art of the personal message was being lost to quick texts and generic emojis.
           </p>
           <p className="text-stone-500 leading-relaxed mb-6">
-            We believe that a greeting card is more than just paper or pixels—it's a vessel for emotion,
+            We believe that a greeting card is more than just paper or pixels—it&apos;s a vessel for emotion,
             a moment of connection, and a lasting memory. Our mission is to combine the timeless
             elegance of traditional stationery with the convenience of digital delivery.
           </p>
           <p className="text-stone-500 leading-relaxed">
             Every template in our collection is hand-picked or custom-designed by independent artists,
-            ensuring that your message is wrapped in beauty. Whether it's a milestone birthday,
-            a quiet thank you, or a grand celebration, we're here to help you say it better.
+            ensuring that your message is wrapped in beauty. Whether it&apos;s a milestone birthday,
+            a quiet thank you, or a grand celebration, we&apos;re here to help you say it better.
           </p>
         </div>
       </div>

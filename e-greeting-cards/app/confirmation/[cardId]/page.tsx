@@ -253,7 +253,7 @@ export default function ConfirmationPage({
             className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8"
           >
             <p className="text-sm text-blue-800">
-              <strong className="inline-flex items-center gap-1"><Lightbulb size={14} /> What's Next?</strong><br />
+              <strong className="inline-flex items-center gap-1"><Lightbulb size={14} /> What&apos;s Next?</strong><br />
               Recipients will receive an email with your card link. They can open it anytime within the next 7 days. You can track when they open it in your dashboard.
             </p>
           </motion.div>
