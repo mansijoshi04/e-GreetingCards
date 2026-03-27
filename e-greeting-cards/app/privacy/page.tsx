@@ -44,7 +44,7 @@ export default function PrivacyPage() {
             <h2 className="font-serif text-2xl font-bold text-stone-900 mb-4">3. Data Retention</h2>
             <p className="text-stone-600 leading-relaxed">
               Cards and their associated content are automatically deleted 7 days after creation. Email addresses
-              collected for delivery purposes are not retained beyond the card's expiry period. Payment records
+              collected for delivery purposes are not retained beyond the card&apos;s expiry period. Payment records
               are retained as required by law and by Paddle&apos;s terms of service.
             </p>
           </section>
