@@ -17,7 +17,20 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -e
+
             cd ~/apps/giflove-staging/e-greeting-cards
+
+            # Pull latest code
             git pull origin staging
+
+            # Sync Nginx proxy config — safe to overwrite, SSL config is separate and managed by Certbot
+            sudo cp nginx/conf.d/giflove-staging.conf /etc/nginx/conf.d/giflove-staging.conf
+            sudo nginx -t
+            sudo systemctl reload nginx
+
+            # Rebuild and restart app container
             docker compose -f docker-compose.prod.yml up -d --build
+
+            # Clean up dangling images to save disk space
             docker image prune -f

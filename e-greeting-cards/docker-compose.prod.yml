@@ -36,6 +36,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: ${NEXT_PUBLIC_PADDLE_CLIENT_TOKEN}
+        NEXT_PUBLIC_PADDLE_ENVIRONMENT: ${PADDLE_ENVIRONMENT:-sandbox}
     container_name: greeting-cards-app-prod
     ports:
       - "127.0.0.1:${APP_PORT:-3040}:3000"

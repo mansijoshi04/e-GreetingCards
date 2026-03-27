@@ -1,0 +1,21 @@
+# Initial Nginx config for giflove.ca (production)
+#
+# USAGE: This file is for FIRST-TIME SETUP ONLY. Copy it to the VPS once,
+# then run Certbot. After that, Certbot manages this file and CI/CD never
+# touches it again.
+#
+# The proxy location is in a separate include file managed by CI/CD:
+#   /etc/nginx/conf.d/giflove-production.conf
+#
+# Setup commands (run once on VPS):
+#   sudo cp nginx/giflove.ca /etc/nginx/sites-available/giflove.ca
+#   sudo ln -s /etc/nginx/sites-available/giflove.ca /etc/nginx/sites-enabled/
+#   sudo nginx -t && sudo systemctl reload nginx
+#   sudo certbot --nginx -d giflove.ca -d www.giflove.ca
+
+server {
+    server_name giflove.ca www.giflove.ca;
+
+    # Proxy config is managed separately by CI/CD — safe to update without touching this file
+    include /etc/nginx/conf.d/giflove-production.conf;
+}
