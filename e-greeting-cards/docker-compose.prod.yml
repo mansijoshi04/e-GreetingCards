@@ -2,7 +2,6 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: greeting-cards-db-prod
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-greeting_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-greeting_password}
@@ -20,7 +19,6 @@ services:
   # Redis Cache
   redis:
     image: redis:7-alpine
-    container_name: greeting-cards-redis-prod
     volumes:
       - redis_data:/data
     healthcheck:
@@ -39,7 +37,6 @@ services:
       args:
         NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: ${NEXT_PUBLIC_PADDLE_CLIENT_TOKEN}
         NEXT_PUBLIC_PADDLE_ENVIRONMENT: ${PADDLE_ENVIRONMENT:-sandbox}
-    container_name: greeting-cards-app-prod
     ports:
       - "127.0.0.1:${APP_PORT:-3040}:3000"
     environment:
