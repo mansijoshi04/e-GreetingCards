@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Template } from '@prisma/client';
+import type { StaticTemplate as Template } from '@/lib/templates/types';
 import { Lightbulb } from 'lucide-react';
 
 /** Circular dashed color picker trigger — hides the native input under a styled circle */

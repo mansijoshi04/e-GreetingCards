@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms & Conditions — GifLove</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose-bloom:     #E8476A;
+      --soft-blush:     #FFD6E0;
+      --champagne-gold: #D4A853;
+      --ivory-cream:    #FFF8F0;
+      --deep-berry:     #3D0028;
+      --dusty-mauve:    #B07A8A;
+      --petal-peach:    #FFB49A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--ivory-cream);
+      color: var(--deep-berry);
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: white;
+      border-bottom: 1px solid #F0E4EA;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .logo svg { width: 28px; height: 28px; fill: var(--rose-bloom); }
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--deep-berry);
+    }
+    .logo-text span { color: var(--rose-bloom); }
+    .back-link {
+      font-size: 0.83rem;
+      color: var(--dusty-mauve);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--rose-bloom); }
+
+    /* ── Page layout ── */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    /* ── Page title ── */
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--deep-berry);
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      font-size: 0.88rem;
+      color: var(--dusty-mauve);
+      margin-bottom: 48px;
+    }
+
+    /* ── Paddle disclosure box ── */
+    .paddle-box {
+      background: var(--soft-blush);
+      border-left: 4px solid var(--rose-bloom);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 48px;
+      font-size: 0.92rem;
+      color: var(--deep-berry);
+    }
+    .paddle-box strong { font-weight: 600; }
+    .paddle-box a { color: var(--rose-bloom); text-decoration: underline; }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 44px;
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--deep-berry);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #F0E4EA;
+    }
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--deep-berry);
+      margin: 18px 0 6px;
+    }
+    p {
+      font-size: 0.93rem;
+      color: #5a3344;
+      margin-bottom: 12px;
+    }
+    ul {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+    li {
+      font-size: 0.93rem;
+      color: #5a3344;
+      margin-bottom: 6px;
+    }
+    a {
+      color: var(--rose-bloom);
+      text-decoration: underline;
+    }
+    a:hover { color: #c03358; }
+
+    /* ── Table of contents ── */
+    .toc {
+      background: white;
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 48px;
+      box-shadow: 0 2px 16px rgba(61, 0, 40, 0.05);
+    }
+    .toc p {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dusty-mauve);
+      margin-bottom: 12px;
+    }
+    .toc ol {
+      padding-left: 18px;
+    }
+    .toc li {
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+    }
+    .toc a {
+      color: var(--deep-berry);
+      text-decoration: none;
+    }
+    .toc a:hover { color: var(--rose-bloom); }
+
+    /* ── Footer ── */
+    footer {
+      background: white;
+      border-top: 1px solid #F0E4EA;
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--dusty-mauve);
+    }
+    footer a { color: var(--dusty-mauve); }
+    footer a:hover { color: var(--rose-bloom); }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <span class="logo-text">Gif<span>Love</span></span>
+    </a>
+    <a href="index.html" class="back-link">← Back to home</a>
+  </header>
+
+  <div class="page">
+
+    <h1 class="page-title">Terms &amp; Conditions</h1>
+    <p class="page-subtitle">Last updated: March 2026 &nbsp;·&nbsp; Effective immediately upon use of GifLove</p>
+
+    <!-- Paddle MoR disclosure — required by Paddle -->
+    <div class="paddle-box">
+      <strong>Payment processing notice:</strong> Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns. By purchasing through GifLove, you are transacting with Paddle.com. Paddle's own <a href="https://www.paddle.com/legal/terms" target="_blank" rel="noopener">Terms of Service</a> apply to all purchases in addition to these Terms.
+    </div>
+
+    <!-- Table of contents -->
+    <div class="toc">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#about">About GifLove</a></li>
+        <li><a href="#eligibility">Eligibility</a></li>
+        <li><a href="#payments">Purchases &amp; Payment</a></li>
+        <li><a href="#refunds">Refunds &amp; Cancellations</a></li>
+        <li><a href="#cards">How Cards Work</a></li>
+        <li><a href="#content">Your Content</a></li>
+        <li><a href="#acceptable-use">Acceptable Use</a></li>
+        <li><a href="#ip">Intellectual Property</a></li>
+        <li><a href="#liability">Limitation of Liability</a></li>
+        <li><a href="#changes">Changes to These Terms</a></li>
+        <li><a href="#governing-law">Governing Law</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ol>
+    </div>
+
+    <!-- 1 -->
+    <section id="about">
+      <h2>1. About GifLove</h2>
+      <p>GifLove ("we", "us", "our") is a digital greeting card platform that allows users to create, customise, and share animated greeting cards via shareable links. These Terms &amp; Conditions ("Terms") govern your access to and use of the GifLove website and services.</p>
+      <p>By using GifLove, you agree to be bound by these Terms. If you do not agree, please do not use our service.</p>
+    </section>
+
+    <!-- 2 -->
+    <section id="eligibility">
+      <h2>2. Eligibility</h2>
+      <p>You must be at least 13 years of age to use GifLove. If you are under 18, you confirm that you have parental or guardian consent to use this service and make purchases. By using GifLove, you represent that all information you provide is accurate and truthful.</p>
+    </section>
+
+    <!-- 3 -->
+    <section id="payments">
+      <h2>3. Purchases &amp; Payment</h2>
+      <h3>3.1 Pricing</h3>
+      <p>GifLove offers greeting cards at the following prices:</p>
+      <ul>
+        <li><strong>Basic cards</strong> — $3.00 USD per card</li>
+        <li><strong>Premium cards</strong> — $5.00 USD per card</li>
+      </ul>
+      <p>All prices are displayed in USD and are inclusive of any applicable taxes where required by law. Prices are subject to change at any time; any change will not affect purchases already completed.</p>
+
+      <h3>3.2 Payment Processing</h3>
+      <p>All payments are processed securely by <strong>Paddle.com</strong>, who acts as the Merchant of Record for all GifLove transactions. This means that when you complete a purchase, your payment is processed by Paddle — not directly by GifLove. Paddle's <a href="https://www.paddle.com/legal/terms" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">Privacy Policy</a> apply to all payment transactions.</p>
+      <p>Paddle accepts all major credit and debit cards, PayPal, and other payment methods as made available at checkout. By completing a purchase, you authorise Paddle to charge your selected payment method for the stated amount.</p>
+
+      <h3>3.3 One-Time Payments</h3>
+      <p>GifLove operates on a per-card payment model. There are no subscriptions, recurring charges, or hidden fees. You pay once per card at the time of purchase.</p>
+    </section>
+
+    <!-- 4 -->
+    <section id="refunds">
+      <h2>4. Refunds &amp; Cancellations</h2>
+      <h3>4.1 Refund Window</h3>
+      <p>Because Paddle is the Merchant of Record, Paddle's refund policy applies to all purchases made through GifLove. You are entitled to request a full refund within <strong>30 days</strong> of your purchase date. Refund requests are reviewed on a case-by-case basis and we aim to handle all requests fairly and promptly.</p>
+
+      <h3>4.2 How to Request a Refund</h3>
+      <p>To request a refund, please contact us at <a href="mailto:hello@giflove.com">hello@giflove.com</a> with your order details. Paddle may also be contacted directly for payment-related queries. Refunds are typically processed within 5–10 business days and returned to your original payment method.</p>
+
+      <h3>4.3 Non-Refundable Circumstances</h3>
+      <p>Refunds will not be issued in the following circumstances:</p>
+      <ul>
+        <li>More than 30 days have passed since the date of purchase</li>
+        <li>The request is made in bad faith or in violation of these Terms</li>
+      </ul>
+
+      <h3>4.4 Cancellations</h3>
+      <p>As cards are created and delivered digitally at the time of purchase, cancellations are not possible once a card link has been generated and shared. Please review your card before sharing the link.</p>
+    </section>
+
+    <!-- 5 -->
+    <section id="cards">
+      <h2>5. How Cards Work</h2>
+      <h3>5.1 Card Delivery</h3>
+      <p>GifLove cards are delivered as shareable links. You are responsible for sharing the link with your intended recipients via any channel of your choosing (email, WhatsApp, SMS, etc.). GifLove does not directly send cards on your behalf unless an email delivery option is explicitly selected during the creation process.</p>
+
+      <h3>5.2 Card Expiry</h3>
+      <p>All GifLove card <strong>links</strong> expire <strong>7 days</strong> from the date of creation. After expiry, the shareable link will no longer be accessible to recipients. This is a feature of the service and is disclosed prior to purchase.</p>
+      <p>Before the link expires, recipients have the option to <strong>download the card as an image file</strong> to keep permanently. We encourage senders to let recipients know about this option so they can save any card they wish to keep. Link expiry does not entitle you to a refund once the card has been created.</p>
+
+      <h3>5.3 Recipient Tracking</h3>
+      <p>GifLove provides senders with basic tracking information, including when a card link has been opened. This is done using standard web analytics techniques. By using GifLove to send a card, you acknowledge that the recipient's open activity may be tracked and reported to you. Recipients are informed of this in our Privacy Policy.</p>
+
+      <h3>5.4 Multi-Recipient Cards</h3>
+      <p>A single card link may be shared with multiple recipients. The same link expiry applies regardless of the number of recipients. You may share a single card link with up to 15 recipients.</p>
+    </section>
+
+    <!-- 6 -->
+    <section id="content">
+      <h2>6. Your Content</h2>
+      <p>You retain ownership of any text, messages, or personalised content you create within a GifLove card ("Your Content"). By creating a card, you grant GifLove a limited, non-exclusive licence to store and display Your Content solely for the purpose of delivering the card to your recipients.</p>
+      <p>GifLove does not use Your Content for marketing, training, or any other purpose beyond service delivery. Your Content is automatically deleted when a card expires.</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="acceptable-use">
+      <h2>7. Acceptable Use</h2>
+      <p>You agree not to use GifLove to create or send cards that contain:</p>
+      <ul>
+        <li>Harassment, threats, hate speech, or content that targets individuals based on protected characteristics</li>
+        <li>Sexually explicit or obscene material</li>
+        <li>Content that infringes any third party's intellectual property rights</li>
+        <li>Spam, phishing, or any unsolicited bulk communications</li>
+        <li>Malicious code, links to harmful websites, or any content intended to deceive recipients</li>
+        <li>Any content that is unlawful under applicable law</li>
+      </ul>
+      <p>GifLove reserves the right to suspend or terminate access to the service for any user found to be in violation of this section, without refund.</p>
+    </section>
+
+    <!-- 8 -->
+    <section id="ip">
+      <h2>8. Intellectual Property</h2>
+      <p>All card templates, animations, designs, graphics, and software that make up the GifLove service are the intellectual property of GifLove and are protected by applicable copyright, trademark, and other intellectual property laws. You may not copy, reproduce, distribute, or create derivative works from any part of the GifLove service without our prior written consent.</p>
+      <p>The GifLove name and logo are trademarks of GifLove. Nothing in these Terms grants you any right to use our trademarks.</p>
+    </section>
+
+    <!-- 9 -->
+    <section id="liability">
+      <h2>9. Limitation of Liability</h2>
+      <p>GifLove is provided on an "as is" and "as available" basis. We do not warrant that the service will be uninterrupted, error-free, or that cards will be delivered successfully to all recipients (as delivery depends on external factors such as the recipient's device and internet connection).</p>
+      <p>To the maximum extent permitted by applicable law, GifLove shall not be liable for:</p>
+      <ul>
+        <li>Any indirect, incidental, or consequential damages arising from your use of the service</li>
+        <li>Loss of data, revenue, or goodwill</li>
+        <li>Any failure to deliver a card caused by incorrect recipient information provided by you</li>
+        <li>Card links that are forwarded to unintended recipients by the original recipient</li>
+      </ul>
+      <p>Our total liability to you for any claim arising out of your use of GifLove shall not exceed the amount you paid for the card in question.</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="changes">
+      <h2>10. Changes to These Terms</h2>
+      <p>We may update these Terms from time to time to reflect changes in our service or legal requirements. When we do, we will update the "Last updated" date at the top of this page. Continued use of GifLove after any changes constitutes your acceptance of the revised Terms. We encourage you to review this page periodically.</p>
+    </section>
+
+    <!-- 11 -->
+    <section id="governing-law">
+      <h2>11. Governing Law</h2>
+      <p>These Terms are governed by and construed in accordance with the laws of the Province of Ontario and the federal laws of Canada applicable therein, without regard to conflict of law principles. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts of Ontario, Canada, and you consent to the personal jurisdiction of such courts.</p>
+    </section>
+
+    <!-- 12 -->
+    <section id="contact">
+      <h2>12. Contact Us</h2>
+      <p>If you have any questions about these Terms, or wish to exercise any of your rights, please contact us at:</p>
+      <p>
+        <strong>GifLove</strong><br />
+        Ottawa, Ontario, Canada<br />
+        Email: <a href="mailto:hello@giflove.com">hello@giflove.com</a>
+      </p>
+      <p>For payment-related queries or refund requests processed by Paddle, you may also contact Paddle directly via <a href="https://www.paddle.com" target="_blank" rel="noopener">paddle.com</a>.</p>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>© 2026 GifLove &nbsp;·&nbsp; <a href="terms.html">Terms &amp; Conditions</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="mailto:hello@giflove.com">hello@giflove.com</a></p>
+    <p style="margin-top: 8px;">Paddle.com is the Merchant of Record for all GifLove orders. <a href="https://www.paddle.com/legal/terms" target="_blank" rel="noopener">Paddle's Terms</a> apply to all purchases.</p>
+  </footer>
+
+</body>
+</html>

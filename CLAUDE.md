@@ -1181,13 +1181,13 @@ const typography = {
 - **Email**: Resend integrated (`emailService.ts`), Mailgun commented out for reference
 - **Animations**: ScrollToOpen (envelope), ClickToReveal (cover fade), confetti, theme-aware cover screens
 - **Templates**: 3 templates seeded (birthday, anniversary, graduation)
-- **Deployment**: Staging (`staging.giflove.ca`) being set up on Hostinger VPS
-- **CI/CD**: GitHub Actions workflows ready (`ci.yml`, `deploy-staging.yml`, `deploy-production.yml`)
+- **Deployment**: Staging live at `staging.giflove.ca` on Hostinger VPS ✅
+- **CI/CD**: GitHub Actions fully working (`ci.yml`, `deploy-staging.yml`, `deploy-production.yml`) ✅
 
 ### Deployment Docs
 - `docs/DNS_SETUP.md` — GoDaddy DNS records (Resend + staging/prod A records)
 - `docs/DEPLOYMENT.md` — Step-by-step VPS deployment for staging and production
-- `docs/CICD.md` — GitHub Actions setup, SSH keys, sudoers, branch strategy
+- `docs/CICD_SETUP.md` — GitHub Actions setup, SSH keys, branch strategy
 - `docs/phase_4_plan.md` — Phase 4 overview and order of operations
 
 ### Key File Locations
@@ -1195,8 +1195,29 @@ const typography = {
 - `lib/services/paymentService.ts` — Paddle integration
 - `docker-compose.yml` — Local dev (hot reload, `prisma db push`)
 - `docker-compose.prod.yml` — VPS production (built image, `prisma migrate deploy`)
-- `nginx/conf.d/` — Proxy configs managed by CI/CD
-- `nginx/staging.giflove.ca` + `nginx/giflove.ca` — Initial site configs (set up once, Certbot manages after)
+- `nginx/staging.giflove.ca` + `nginx/giflove.ca` — Initial site configs (set up once manually, Certbot manages after)
+- `nginx/conf.d/` — **Not used by CI/CD.** These files are reference only. Do not copy them to the VPS.
+
+### Nginx Setup (Important)
+
+Request flow: `Browser → nginx (443/80) → Docker app (localhost:3040)`
+
+Nginx is configured **once manually** and then owned by Certbot. CI/CD never touches nginx.
+
+**Active config on VPS:** `/etc/nginx/sites-available/staging.giflove.ca`
+- Contains the full `server` block with SSL (managed by Certbot) and `location /` proxy to `localhost:3040`
+- Symlinked to `/etc/nginx/sites-enabled/staging.giflove.ca`
+- **Never edit this file** — Certbot manages it for SSL renewal
+
+**`/etc/nginx/conf.d/`** — Only used for other apps on the VPS. GifLove does NOT use `conf.d/`. If a `giflove-staging.conf` appears here with a bare `location` block, delete it — it's orphaned and will break `nginx -t`.
+
+**One-time setup (already done for staging):**
+```bash
+sudo cp nginx/staging.giflove.ca /etc/nginx/sites-available/staging.giflove.ca
+sudo ln -s /etc/nginx/sites-available/staging.giflove.ca /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d staging.giflove.ca
+```
 
 ---
 

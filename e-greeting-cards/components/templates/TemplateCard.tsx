@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Template } from '@prisma/client';
+import type { StaticTemplate as Template } from '@/lib/templates/types';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowDown, MousePointerClick, Play } from 'lucide-react';
 import CardDecorations from '@/components/cards/CardDecorations';

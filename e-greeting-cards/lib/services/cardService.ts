@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
-import redis from '@/lib/db/redis';
 import { generateLinkToken, cacheCardLink } from './linkService';
+import { getTemplateById } from '@/lib/templates/registry';
 
 /**
  * Card creation data
@@ -44,9 +44,6 @@ export async function createCard(cardData: CardCreationData) {
       stripePaymentId: cardData.stripePaymentId,
       amountPaidCents: cardData.amountCents,
     },
-    include: {
-      template: true,
-    },
   });
 
   // Cache in Redis for fast access
@@ -75,14 +72,15 @@ export async function createCard(cardData: CardCreationData) {
  * Get card with all details
  */
 export async function getCard(cardId: string) {
-  return await prisma.card.findUnique({
+  const card = await prisma.card.findUnique({
     where: { id: cardId },
-    include: {
-      template: true,
-      recipients: true,
-      opens: true,
-    },
+    include: { recipients: true, opens: true },
   });
+
+  if (!card) return null;
+
+  const template = getTemplateById(card.templateId) ?? null;
+  return { ...card, template };
 }
 
 /**

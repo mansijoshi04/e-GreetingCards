@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Card, Template } from '@prisma/client';
+import { Card } from '@prisma/client';
+import type { StaticTemplate } from '@/lib/templates/types';
 import ScrollToOpen from '@/components/animations/ScrollToOpen';
 import ClickToReveal from '@/components/animations/ClickToReveal';
 
-type CardWithTemplate = Card & { template: Template };
+type CardWithTemplate = Card & { template: StaticTemplate };
 
 interface CardRendererProps {
   card: CardWithTemplate;

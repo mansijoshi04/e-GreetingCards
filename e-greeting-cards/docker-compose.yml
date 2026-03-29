@@ -85,7 +85,6 @@ services:
 
     command: >
       sh -c "npx prisma db push || true &&
-             npx prisma db seed || true &&
              npm run dev"
 
 volumes:

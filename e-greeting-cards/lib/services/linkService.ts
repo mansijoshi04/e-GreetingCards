@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import redis from '@/lib/db/redis';
+import { getTemplateById } from '@/lib/templates/registry';
 
 /**
  * Generate a unique link token for a card
@@ -120,13 +121,15 @@ export async function cacheCardLink(
  * Fetch card data with template and recipients
  */
 export async function fetchCardData(cardId: string) {
-  return await prisma.card.findUnique({
+  const card = await prisma.card.findUnique({
     where: { id: cardId },
-    include: {
-      template: true,
-      recipients: true,
-    },
+    include: { recipients: true },
   });
+
+  if (!card) return null;
+
+  const template = getTemplateById(card.templateId) ?? null;
+  return { ...card, template };
 }
 
 /**

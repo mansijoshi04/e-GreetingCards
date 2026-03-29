@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { Template } from '@prisma/client';
+import type { StaticTemplate as Template } from '@/lib/templates/types';
 import { Loader2 } from 'lucide-react';
 import CustomizationPanel from '@/components/editor/CustomizationPanel';
 import PreviewPane from '@/components/editor/PreviewPane';

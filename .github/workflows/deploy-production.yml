@@ -19,7 +19,7 @@ jobs:
           script: |
             set -e
 
-            cd ~/apps/giflove-production/e-greeting-cards
+            cd ~/apps/giflove-production/e-GreetingCards/e-greeting-cards
 
             # Pull latest code
             git pull origin main
