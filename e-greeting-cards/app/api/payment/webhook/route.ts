@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { verifyWebhookSignature, parseWebhookEvent } from '@/lib/services/paymentService';
 import { sendCardEmailsToRecipients } from '@/lib/services/emailService';
+import { getTemplateById } from '@/lib/templates/registry';
 
 export const runtime = 'nodejs';
 
@@ -54,8 +55,9 @@ export async function POST(request: NextRequest) {
         // Check if card already marked as paid (idempotency)
         const existingCard = await prisma.card.findUnique({
           where: { id: cardId },
-          include: { template: true, recipients: true },
+          include: { recipients: true },
         });
+        const existingTemplate = existingCard ? (getTemplateById(existingCard.templateId) ?? null) : null;
 
         if (!existingCard) {
           console.error(`Card not found: ${cardId}`);
@@ -90,7 +92,7 @@ export async function POST(request: NextRequest) {
           const emailResult = await sendCardEmailsToRecipients(recipientEmails, {
             cardUrl,
             senderName: existingCard.senderName,
-            cardCategory: existingCard.template.category,
+            cardCategory: existingTemplate?.category ?? 'birthday',
             expiresAt: existingCard.expiresAt,
           });
 

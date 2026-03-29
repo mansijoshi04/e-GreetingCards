@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { sendCardEmailsToRecipients } from '@/lib/services/emailService';
+import { getTemplateById } from '@/lib/templates/registry';
 
 export const runtime = 'nodejs';
 
@@ -31,8 +32,9 @@ export async function POST(request: NextRequest) {
     // Fetch the card
     const card = await prisma.card.findUnique({
       where: { id: body.cardId },
-      include: { template: true, recipients: true },
+      include: { recipients: true },
     });
+    const template = card ? (getTemplateById(card.templateId) ?? null) : null;
 
     if (!card) {
       return NextResponse.json(
@@ -66,7 +68,7 @@ export async function POST(request: NextRequest) {
       const emailResult = await sendCardEmailsToRecipients(recipientEmails, {
         cardUrl,
         senderName: card.senderName,
-        cardCategory: card.template.category,
+        cardCategory: template?.category ?? 'birthday',
         expiresAt: card.expiresAt,
       });
 
