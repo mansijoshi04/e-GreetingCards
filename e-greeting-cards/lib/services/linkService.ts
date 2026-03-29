@@ -128,7 +128,9 @@ export async function fetchCardData(cardId: string) {
 
   if (!card) return null;
 
-  const template = getTemplateById(card.templateId) ?? null;
+  const template = getTemplateById(card.templateId);
+  if (!template) return null;
+
   return { ...card, template };
 }
 
