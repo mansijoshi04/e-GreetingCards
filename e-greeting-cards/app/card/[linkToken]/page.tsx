@@ -106,7 +106,7 @@ export default async function CardPage({ params }: CardPageProps) {
   const cardId = validation.cardId;
   const card = await fetchCardData(cardId);
 
-  if (!card) {
+  if (!card || !card.template) {
     notFound();
   }
 
