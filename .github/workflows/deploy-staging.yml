@@ -21,7 +21,8 @@ jobs:
 
             cd ~/apps/giflove-staging/e-greeting-cards
 
-            # Pull latest code
+            # Discard any local changes and pull latest code
+            git checkout -- .
             git pull origin staging
 
             # Rebuild and restart app container

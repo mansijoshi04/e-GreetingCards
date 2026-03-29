@@ -21,7 +21,8 @@ jobs:
 
             cd ~/apps/giflove-production/e-GreetingCards/e-greeting-cards
 
-            # Pull latest code
+            # Discard any local changes and pull latest code
+            git checkout -- .
             git pull origin main
 
             # Rebuild and restart app container
