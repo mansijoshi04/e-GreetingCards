@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Template } from '@prisma/client';
+import type { StaticTemplate as Template } from '@/lib/templates/types';
 import TemplateCard from './TemplateCard';
 import { motion } from 'framer-motion';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Template } from '@prisma/client';
+import type { StaticTemplate as Template } from '@/lib/templates/types';
 import { Lightbulb } from 'lucide-react';
 
 /** Circular dashed color picker trigger — hides the native input under a styled circle */
@@ -149,7 +149,7 @@ export default function CustomizationPanel({
           className="w-full px-4 py-2 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 text-stone-900"
         />
         <p className="text-xs text-stone-500 mt-1">
-          Appears as "Dear Sarah," on the card
+          Appears as &quot;Dear Sarah,&quot; on the card
         </p>
       </motion.div>
 

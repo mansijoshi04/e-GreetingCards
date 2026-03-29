@@ -1,6 +1,6 @@
 'use client';
 
-import { Template } from '@prisma/client';
+import type { StaticTemplate as Template } from '@/lib/templates/types';
 import CardContent from '@/components/cards/CardContent';
 
 interface CardPreviewProps {

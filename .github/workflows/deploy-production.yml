@@ -1,12 +1,12 @@
-name: Deploy Staging
+name: Deploy Production
 
 on:
   push:
-    branches: [staging]
+    branches: [main]
 
 jobs:
   deploy:
-    name: Deploy to VPS (staging)
+    name: Deploy to VPS (production)
     runs-on: ubuntu-latest
 
     steps:
@@ -19,15 +19,10 @@ jobs:
           script: |
             set -e
 
-            cd ~/apps/giflove-staging/e-greeting-cards
+            cd ~/apps/giflove-production/e-GreetingCards/e-greeting-cards
 
             # Pull latest code
-            git pull origin staging
-
-            # Sync Nginx proxy config — safe to overwrite, SSL config is separate and managed by Certbot
-            sudo cp nginx/conf.d/giflove-staging.conf /etc/nginx/conf.d/giflove-staging.conf
-            sudo nginx -t
-            sudo systemctl reload nginx
+            git pull origin main
 
             # Rebuild and restart app container
             docker compose -f docker-compose.prod.yml up -d --build

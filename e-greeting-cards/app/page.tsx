@@ -19,7 +19,7 @@ export default function Home() {
             beautifully crafted.
           </h1>
           <p className="text-stone-500 text-lg max-w-xl mx-auto">
-            Send more than just a message. Choose from our curated collection of artistic e-cards and personalize them for your loved ones.
+            Because some moments deserve more than a text. Beautifully animated e-cards, personalized by you, delivered instantly.
           </p>
         </div>
 

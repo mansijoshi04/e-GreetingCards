@@ -1,6 +1,6 @@
 'use client';
 
-import { Template } from '@prisma/client';
+import type { StaticTemplate as Template } from '@/lib/templates/types';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import CardPreview from './CardPreview';

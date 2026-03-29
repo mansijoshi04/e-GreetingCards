@@ -106,7 +106,7 @@ Your A records are set to 600 seconds (10 minutes). That's fast and good for now
 - [x] `TXT _dmarc` exists (DMARC policy)
 
 ### Verify in Resend Dashboard
-- [ ] Go to resend.com → Domains → `giflove.ca` → all checks show green
+- [x] Go to resend.com → Domains → `giflove.ca` → all checks show green
 - [ ] Send a test email and confirm it arrives (not in spam)
 
 ### After VPS Nginx Setup (covered in deployment doc)

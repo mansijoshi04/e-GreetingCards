@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GifLove — Coming Soon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose-bloom:     #E8476A;
+      --soft-blush:     #FFD6E0;
+      --champagne-gold: #D4A853;
+      --ivory-cream:    #FFF8F0;
+      --deep-berry:     #3D0028;
+      --dusty-mauve:    #B07A8A;
+      --petal-peach:    #FFB49A;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--ivory-cream);
+      color: var(--deep-berry);
+    }
+
+    /* ── Decorative blobs ── */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #FFD6E0 0%, transparent 70%);
+      top: -160px; left: -160px;
+      opacity: 0.7;
+    }
+    body::after {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, #FFB49A 0%, transparent 70%);
+      bottom: -120px; right: -120px;
+      opacity: 0.5;
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 48px;
+      animation: fadeDown 0.6s ease both;
+    }
+    .logo-heart {
+      width: 36px; height: 36px;
+      fill: var(--rose-bloom);
+    }
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--deep-berry);
+      letter-spacing: -0.01em;
+    }
+    .logo-text span {
+      color: var(--rose-bloom);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 600px;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--soft-blush);
+      color: var(--rose-bloom);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--deep-berry);
+      margin-bottom: 20px;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--rose-bloom);
+    }
+    .subtitle {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--dusty-mauve);
+      line-height: 1.7;
+      max-width: 460px;
+      margin: 0 auto 40px;
+    }
+
+    /* ── Form ── */
+    .form-card {
+      background: white;
+      border-radius: 24px;
+      padding: 36px 32px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 4px 40px rgba(61, 0, 40, 0.07);
+      animation: fadeUp 0.7s ease 0.25s both;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--dusty-mauve);
+      margin-bottom: 8px;
+      text-align: left;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid #F0E4EA;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--deep-berry);
+      background: var(--ivory-cream);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 16px;
+    }
+    .form-input::placeholder { color: #C9A8B4; }
+    .form-input:focus {
+      border-color: var(--rose-bloom);
+      box-shadow: 0 0 0 3px rgba(232, 71, 106, 0.1);
+    }
+    .form-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--rose-bloom);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      margin-top: 4px;
+      letter-spacing: 0.01em;
+    }
+    .form-btn:hover {
+      background: #d63d5f;
+      box-shadow: 0 6px 20px rgba(232, 71, 106, 0.3);
+      transform: translateY(-1px);
+    }
+    .form-btn:active { transform: translateY(0); }
+    .form-note {
+      font-size: 0.75rem;
+      color: var(--dusty-mauve);
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    /* ── Success state ── */
+    .success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+    }
+    .success-heart {
+      font-size: 2.4rem;
+      animation: heartbeat 0.6s ease;
+    }
+    .success h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--deep-berry);
+    }
+    .success p {
+      font-size: 0.88rem;
+      color: var(--dusty-mauve);
+      line-height: 1.6;
+    }
+
+    /* ── Features row ── */
+    .features {
+      display: flex;
+      gap: 32px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s ease 0.4s both;
+    }
+    .feature {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      max-width: 130px;
+    }
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--soft-blush);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .feature span {
+      font-size: 0.78rem;
+      color: var(--dusty-mauve);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #C9A8B4;
+    }
+    footer a {
+      color: #C9A8B4;
+      text-decoration: underline;
+    }
+    footer a:hover { color: var(--rose-bloom); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heartbeat {
+      0%   { transform: scale(0.6); }
+      60%  { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .form-card { padding: 28px 20px; }
+      .features { gap: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- Logo -->
+    <div class="logo">
+      <svg class="logo-heart" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <span class="logo-text">Gift<span>Love</span></span>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="badge">Coming Soon</div>
+      <h1>Cards that feel like<br /><em>a real hug</em></h1>
+      <p class="subtitle">
+        Beautiful, animated greeting cards you send as a link.
+        No stamps. No stress. Just the feeling of someone who actually tried.
+      </p>
+    </div>
+
+    <!-- Sign-up form -->
+    <div class="form-card">
+      <form
+        id="signup-form"
+        action="signup.php"
+        method="POST"
+        onsubmit="handleSubmit(event)"
+      >
+        <label class="form-label" for="name">Your name</label>
+        <input
+          class="form-input"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Manushi"
+          required
+        />
+
+        <label class="form-label" for="email">Email address</label>
+        <input
+          class="form-input"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          required
+        />
+
+        <button class="form-btn" type="submit">
+          Notify me when it's live ✨
+        </button>
+
+        <p class="form-note">No spam, ever. Just a note when GifLove is ready.</p>
+      </form>
+
+      <!-- Success message (shown after submit) -->
+      <div class="success" id="success-msg">
+        <div class="success-heart">💗</div>
+        <h3>You're on the list!</h3>
+        <p>We'll send you a note the moment GifLove goes live.<br />You're going to love it.</p>
+      </div>
+    </div>
+
+    <!-- Feature highlights -->
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">✉️</div>
+        <span>Animated cards that open like real ones</span>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💸</div>
+        <span>From $3. Pay once, no subscription</span>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📱</div>
+        <span>Opens on any phone, no app needed</span>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">👀</div>
+        <span>See when your card is opened</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 GifLove &nbsp;·&nbsp; <a href="terms.html">Terms &amp; Conditions</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="mailto:hello@giflove.com">hello@giflove.com</a></p>
+    <p style="margin-top: 8px; font-size: 0.7rem;">Paddle.com is the Merchant of Record for all GifLove orders. Paddle provides all customer service inquiries and handles returns.</p>
+  </footer>
+
+  <script>
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('signup-form');
+      const success = document.getElementById('success-msg');
+      const btn = form.querySelector('button');
+
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        const json = await res.json();
+
+        if (json.ok) {
+          form.style.display = 'none';
+          success.style.display = 'flex';
+        } else {
+          btn.textContent = 'Try again ✨';
+          btn.disabled = false;
+          alert(json.error || 'Something went wrong — please try again.');
+        }
+      } catch {
+        btn.textContent = 'Try again ✨';
+        btn.disabled = false;
+        alert('Something went wrong — please try again.');
+      }
+    }
+  </script>
+</body>
+</html>

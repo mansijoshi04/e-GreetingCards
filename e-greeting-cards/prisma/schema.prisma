@@ -11,27 +11,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Card Templates (pre-designed layouts)
-model Template {
-  id            String   @id @default(uuid())
-  name          String
-  category      String // birthday, anniversary, graduation, thankYou, congratulations
-  tier          String // basic, premium
-  priceCents    Int      @map("price_cents")
-  thumbnailUrl  String   @map("thumbnail_url")
-  designConfig  String   @map("design_config") // Full design specification (JSON string)
-  isActive      Boolean  @default(true) @map("is_active")
-  createdAt     DateTime @default(now()) @map("created_at")
-
-  cards         Card[]
-
-  @@map("templates")
-}
-
 // User-Created Cards
 model Card {
   id               String    @id @default(uuid())
-  templateId       String    @map("template_id")
+  templateId       String    @map("template_id") // slug matching registry id e.g. 'balloon-party'
 
   // Sender Information
   senderEmail      String?   @map("sender_email")
@@ -54,7 +37,6 @@ model Card {
   createdAt        DateTime  @default(now()) @map("created_at")
   lastAccessedAt   DateTime? @map("last_accessed_at")
 
-  template         Template  @relation(fields: [templateId], references: [id])
   recipients       Recipient[]
   opens            CardOpen[]
 

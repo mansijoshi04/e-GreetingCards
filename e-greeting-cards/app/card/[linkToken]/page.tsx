@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { Metadata } from 'next';
 import { Frown } from 'lucide-react';
 import CardRenderer from '@/components/cards/CardRenderer';
@@ -90,12 +91,12 @@ export default async function CardPage({ params }: CardPageProps) {
           <p className="text-gray-600 mb-8">
             {validation.message || 'This greeting card is no longer available.'}
           </p>
-          <a
+          <Link
             href="/"
             className="inline-block px-6 py-3 bg-pink-500 text-white rounded-lg font-semibold hover:bg-pink-600 transition-colors"
           >
             Create Your Own Card
-          </a>
+          </Link>
         </div>
       </div>
     );

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { getTemplateById } from '@/lib/templates/registry';
 
 export const runtime = 'nodejs';
 
@@ -24,15 +25,6 @@ export async function GET(
     const card = await prisma.card.findUnique({
       where: { id: cardId },
       include: {
-        template: {
-          select: {
-            id: true,
-            name: true,
-            category: true,
-            tier: true,
-            priceCents: true,
-          },
-        },
         recipients: {
           select: {
             recipientEmail: true,
@@ -43,6 +35,8 @@ export async function GET(
         },
       },
     });
+
+    const template = card ? (getTemplateById(card.templateId) ?? null) : null;
 
     if (!card) {
       return NextResponse.json(
@@ -71,7 +65,7 @@ export async function GET(
         linkToken: card.linkToken,
         senderName: card.senderName,
         senderEmail: card.senderEmail,
-        template: card.template,
+        template,
         recipients: card.recipients,
         expiresAt: card.expiresAt,
         createdAt: card.createdAt,

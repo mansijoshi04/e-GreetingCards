@@ -67,7 +67,7 @@ export default function TermsPage() {
           <section>
             <h2 className="font-serif text-2xl font-bold text-stone-900 mb-4">6. Limitation of Liability</h2>
             <p className="text-stone-600 leading-relaxed">
-              Giflove is provided "as is". We are not liable for any indirect, incidental, or consequential
+              Giflove is provided &quot;as is&quot;. We are not liable for any indirect, incidental, or consequential
               damages arising from your use of the platform, including failed email deliveries or data loss.
             </p>
           </section>

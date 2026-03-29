@@ -1,14 +1,18 @@
-import { prisma } from '@/lib/db/prisma';
-import { Template } from '@prisma/client';
+import type { StaticTemplate } from '@/lib/templates/types';
+import {
+  getAllTemplates as registryGetAll,
+  getTemplatesByCategory as registryGetByCategory,
+  getTemplateById as registryGetById,
+  getTemplatesGrouped as registryGetGrouped,
+  getCategories as registryGetCategories,
+  getTemplateCounts as registryGetCounts,
+} from '@/lib/templates/registry';
 
 /**
  * Get all active templates
  */
-export async function getAllTemplates(): Promise<Template[]> {
-  return await prisma.template.findMany({
-    where: { isActive: true },
-    orderBy: [{ category: 'asc' }, { createdAt: 'desc' }],
-  });
+export async function getAllTemplates(): Promise<StaticTemplate[]> {
+  return registryGetAll();
 }
 
 /**
@@ -16,14 +20,8 @@ export async function getAllTemplates(): Promise<Template[]> {
  */
 export async function getTemplatesByCategory(
   category: string
-): Promise<Template[]> {
-  return await prisma.template.findMany({
-    where: {
-      isActive: true,
-      category: category.toLowerCase(),
-    },
-    orderBy: { createdAt: 'desc' },
-  });
+): Promise<StaticTemplate[]> {
+  return registryGetByCategory(category.toLowerCase());
 }
 
 /**
@@ -31,30 +29,17 @@ export async function getTemplatesByCategory(
  */
 export async function getTemplateById(
   templateId: string
-): Promise<Template | null> {
-  return await prisma.template.findUnique({
-    where: { id: templateId },
-  });
+): Promise<StaticTemplate | null> {
+  return registryGetById(templateId) ?? null;
 }
 
 /**
  * Get templates grouped by category
  */
 export async function getTemplatesGrouped(): Promise<
-  Record<string, Template[]>
+  Record<string, StaticTemplate[]>
 > {
-  const templates = await getAllTemplates();
-
-  const grouped: Record<string, Template[]> = {};
-
-  templates.forEach((template) => {
-    if (!grouped[template.category]) {
-      grouped[template.category] = [];
-    }
-    grouped[template.category].push(template);
-  });
-
-  return grouped;
+  return registryGetGrouped();
 }
 
 /**
@@ -62,38 +47,22 @@ export async function getTemplatesGrouped(): Promise<
  */
 export async function getTemplateWithDesign(
   templateId: string
-): Promise<(Template & { design: any }) | null> {
-  const template = await getTemplateById(templateId);
-
+): Promise<(StaticTemplate & { design: any }) | null> {
+  const template = registryGetById(templateId);
   if (!template) return null;
-
-  return {
-    ...template,
-    design: template.designConfig as any,
-  };
+  return { ...template, design: template.designConfig as any };
 }
 
 /**
  * Get all categories
  */
 export async function getCategories(): Promise<string[]> {
-  const templates = await getAllTemplates();
-  const categories = new Set(templates.map((t) => t.category));
-  return Array.from(categories).sort();
+  return registryGetCategories().sort();
 }
 
 /**
  * Get template count by category
  */
-export async function getTemplateCounts(): Promise<
-  Record<string, number>
-> {
-  const templates = await getAllTemplates();
-  const counts: Record<string, number> = {};
-
-  templates.forEach((template) => {
-    counts[template.category] = (counts[template.category] || 0) + 1;
-  });
-
-  return counts;
+export async function getTemplateCounts(): Promise<Record<string, number>> {
+  return registryGetCounts();
 }

@@ -34,7 +34,6 @@ export default function RefundPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 text-stone-600">
               <li>Your refund request is made within <strong>24 hours</strong> of purchase.</li>
-              <li><strong>None</strong> of the recipients have opened the card yet.</li>
               <li>A technical error on our end prevented the card from being delivered or displayed correctly.</li>
             </ul>
           </section>

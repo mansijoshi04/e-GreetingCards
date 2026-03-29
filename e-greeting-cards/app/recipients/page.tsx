@@ -178,7 +178,7 @@ export default function RecipientsPage() {
               Who should receive this card?
             </h2>
             <p className="text-stone-600">
-              Add up to 15 recipients. We'll email them a link to view your card.
+              Add up to 15 recipients. We&apos;ll email them a link to view your card.
             </p>
           </div>
 
@@ -249,7 +249,7 @@ export default function RecipientsPage() {
                   <p className="text-rose-600 text-sm mt-1">{errors.senderEmail}</p>
                 )}
                 <p className="text-xs text-stone-500 mt-1">
-                  We'll send tracking updates to this email
+                  We&apos;ll send tracking updates to this email
                 </p>
               </div>
             </motion.div>
