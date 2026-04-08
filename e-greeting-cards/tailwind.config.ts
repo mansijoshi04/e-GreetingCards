@@ -100,7 +100,15 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }: any) {
+      addUtilities({
+        '.preserve-3d': { 'transform-style': 'preserve-3d' },
+        '.backface-hidden': { 'backface-visibility': 'hidden' },
+        '.perspective-2000': { perspective: '2000px' },
+      });
+    },
+  ],
 };
 
 export default config;

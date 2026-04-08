@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { Card } from '@prisma/client';
 import type { StaticTemplate } from '@/lib/templates/types';
-import ScrollToOpen from '@/components/animations/ScrollToOpen';
-import ClickToReveal from '@/components/animations/ClickToReveal';
+import BasicCardExperience from '@/components/cards/BasicCardExperience';
+import PremiumCardExperience from '@/components/cards/PremiumCardExperience';
 
 type CardWithTemplate = Card & { template: StaticTemplate };
 
@@ -12,6 +12,8 @@ interface CardRendererProps {
   card: CardWithTemplate;
   linkToken: string;
 }
+
+const PREMIUM_INTERACTIVE_THEMES = ['cake-celebration', 'balloon-party', 'confetti-burst', 'rose-petals', 'heart-float', 'cap-toss'];
 
 export default function CardRenderer({ card, linkToken }: CardRendererProps) {
   const designConfig = typeof card.template.designConfig === 'string'
@@ -24,7 +26,11 @@ export default function CardRenderer({ card, linkToken }: CardRendererProps) {
     ? JSON.parse(card.customStyling)
     : (card.customStyling as any) || {};
 
-  // Track card open on client side (after hydration)
+  const visualTheme = designConfig?.layout?.visualTheme || '';
+  const tier = card.template.tier;
+  const category = card.template.category;
+
+  // Track card open on client side
   useEffect(() => {
     const trackOpen = async () => {
       try {
@@ -42,35 +48,23 @@ export default function CardRenderer({ card, linkToken }: CardRendererProps) {
         console.error('Failed to track card open:', error);
       }
     };
-
     trackOpen();
   }, [linkToken]);
 
-  // Determine which animation to use
-  const scrollTrigger = designConfig.animations?.scrollTrigger || 'envelope-open';
+  const sharedProps = {
+    content: customText,
+    design: designConfig,
+    styling: customStyling,
+    cardId: card.id,
+    category,
+    tier,
+  };
 
-  if (scrollTrigger === 'click-to-reveal') {
-    return (
-      <ClickToReveal
-        content={customText}
-        design={designConfig}
-        styling={customStyling}
-        cardId={card.id}
-        category={card.template.category}
-        tier={card.template.tier}
-      />
-    );
+  // Premium cards with interactive pre-reveal game
+  if (tier === 'premium' && PREMIUM_INTERACTIVE_THEMES.includes(visualTheme)) {
+    return <PremiumCardExperience {...sharedProps} />;
   }
 
-  // Default: scroll-to-open envelope effect
-  return (
-    <ScrollToOpen
-      content={customText}
-      design={designConfig}
-      styling={customStyling}
-      cardId={card.id}
-      category={card.template.category}
-      tier={card.template.tier}
-    />
-  );
+  // Basic cards (and premium without a specific game) — folded card with typewriter
+  return <BasicCardExperience {...sharedProps} />;
 }
