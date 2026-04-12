@@ -13,7 +13,11 @@ interface CardRendererProps {
   linkToken: string;
 }
 
-const PREMIUM_INTERACTIVE_THEMES = ['cake-celebration', 'balloon-party', 'confetti-burst', 'rose-petals', 'heart-float', 'cap-toss', 'love-scroll', 'birthday-toast', 'floating-balloons'];
+const PREMIUM_INTERACTIVE_THEMES = [
+  'cake-celebration', 'balloon-party', 'confetti-burst',
+  'rose-petals', 'heart-float', 'cap-toss',
+  'love-scroll', 'birthday-toast', 'floating-balloons',
+];
 
 export default function CardRenderer({ card, linkToken }: CardRendererProps) {
   const designConfig = typeof card.template.designConfig === 'string'
@@ -30,7 +34,6 @@ export default function CardRenderer({ card, linkToken }: CardRendererProps) {
   const tier = card.template.tier;
   const category = card.template.category;
 
-  // Track card open on client side
   useEffect(() => {
     const trackOpen = async () => {
       try {
@@ -60,11 +63,9 @@ export default function CardRenderer({ card, linkToken }: CardRendererProps) {
     tier,
   };
 
-  // Premium cards with interactive pre-reveal game
   if (tier === 'premium' && PREMIUM_INTERACTIVE_THEMES.includes(visualTheme)) {
     return <PremiumCardExperience {...sharedProps} />;
   }
 
-  // Basic cards (and premium without a specific game) — folded card with typewriter
   return <BasicCardExperience {...sharedProps} />;
 }

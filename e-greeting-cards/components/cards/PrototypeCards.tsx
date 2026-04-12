@@ -10,9 +10,11 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-// --- Exact components from newdesign/src/App.tsx ---
-// Only change: `from 'motion/react'` → `from 'framer-motion'`
-// Data binding: added `signature` prop to FoldedCard
+// Exact components from newdesign/src/App.tsx
+// Changes from original:
+//   1. `from 'motion/react'` → `from 'framer-motion'`
+//   2. Added `export` to each component
+//   3. Added `signature?` prop to FoldedCard (replaces hardcoded "With love, Heartfelt")
 
 export const FoldedCard = ({
   message,
@@ -97,7 +99,7 @@ export const FoldedCard = ({
           {isLove && isOpen && (
             <div className="absolute bottom-4 left-0 right-0 flex justify-center items-end px-6 z-0 h-32">
               {[...Array(7)].map((_, i) => {
-                const rotation = (i - 3) * 15;
+                const rotation = (i - 3) * 15; // Fan out from -45 to 45 degrees
                 const height = 60 + Math.random() * 40;
                 const heartSize = 16 + Math.random() * 12;
                 const colors = ['#f43f5e', '#fb7185', '#fda4af', '#e11d48', '#be123c'];
@@ -307,7 +309,10 @@ export const BirthdayCakeCard = ({
 
   const handleBlow = () => {
     setIsBlowing(true);
-    setTimeout(() => { setBlownOut(true); }, 2500);
+    // Wait for flames to disappear and smoke to show before transitioning
+    setTimeout(() => {
+      setBlownOut(true);
+    }, 2500);
   };
 
   return (
@@ -321,9 +326,15 @@ export const BirthdayCakeCard = ({
             className="w-full h-full"
           >
             <FoldedCard
-              message={message} recipient={recipient} signature={signature}
-              fontSize={fontSize} color={color} frontImage={image}
-              isBirthday={isBirthday} isLove={isLove} isBalloons={isBalloons}
+              message={message}
+              recipient={recipient}
+              signature={signature}
+              fontSize={fontSize}
+              color={color}
+              frontImage={image}
+              isBirthday={isBirthday}
+              isLove={isLove}
+              isBalloons={isBalloons}
             />
           </motion.div>
         ) : (
@@ -479,9 +490,15 @@ export const BalloonCard = ({
             className="w-full h-full"
           >
             <FoldedCard
-              message={message} recipient={recipient} signature={signature}
-              fontSize={fontSize} color={color} frontImage={image}
-              isBirthday={isBirthday} isLove={isLove} isBalloons={isBalloons}
+              message={message}
+              recipient={recipient}
+              signature={signature}
+              fontSize={fontSize}
+              color={color}
+              frontImage={image}
+              isBirthday={isBirthday}
+              isLove={isLove}
+              isBalloons={isBalloons}
             />
           </motion.div>
         ) : (
@@ -492,7 +509,7 @@ export const BalloonCard = ({
           >
             <div className="absolute inset-0 z-0 overflow-hidden">
               {balloons.map((b, i) => {
-                const leftPos = 15 + i * 12;
+                const leftPos = 15 + i * 12; // Spread balloons from 15% to 87%
                 return (
                   <motion.div
                     key={i}
@@ -545,7 +562,10 @@ export const EnvelopeCard = ({
 
   const handleOpen = () => {
     setIsOpen(true);
-    setTimeout(() => { setShowFolded(true); }, 2000);
+    // Automatically transition to the card after 2 seconds
+    setTimeout(() => {
+      setShowFolded(true);
+    }, 2000);
   };
 
   return (
@@ -559,9 +579,15 @@ export const EnvelopeCard = ({
             className="w-full h-full"
           >
             <FoldedCard
-              message={message} recipient={recipient} signature={signature}
-              fontSize={fontSize} color={color} frontImage={image}
-              isBirthday={isBirthday} isLove={isLove} isBalloons={isBalloons}
+              message={message}
+              recipient={recipient}
+              signature={signature}
+              fontSize={fontSize}
+              color={color}
+              frontImage={image}
+              isBirthday={isBirthday}
+              isLove={isLove}
+              isBalloons={isBalloons}
             />
           </motion.div>
         ) : (
