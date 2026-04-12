@@ -640,7 +640,7 @@ export const TEMPLATES: StaticTemplate[] = [
       layout: {
         backgroundType: 'gradient',
         backgroundValue: ['#3d0015', '#7b1040'],
-        visualTheme: 'rose-petals',
+        visualTheme: 'love-scroll',
         containerStyle: 'centered',
         aspectRatio: '16:9',
       },
@@ -714,7 +714,7 @@ export const TEMPLATES: StaticTemplate[] = [
       layout: {
         backgroundType: 'gradient',
         backgroundValue: ['#fff1f2', '#fff7ed'],
-        visualTheme: 'cake-celebration',
+        visualTheme: 'birthday-toast',
         containerStyle: 'centered',
         aspectRatio: '16:9',
       },
@@ -788,7 +788,7 @@ export const TEMPLATES: StaticTemplate[] = [
       layout: {
         backgroundType: 'gradient',
         backgroundValue: ['#f0f9ff', '#e0f2fe'],
-        visualTheme: 'balloon-party',
+        visualTheme: 'floating-balloons',
         containerStyle: 'centered',
         aspectRatio: '16:9',
       },

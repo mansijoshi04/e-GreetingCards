@@ -13,7 +13,7 @@ interface CardRendererProps {
   linkToken: string;
 }
 
-const PREMIUM_INTERACTIVE_THEMES = ['cake-celebration', 'balloon-party', 'confetti-burst', 'rose-petals', 'heart-float', 'cap-toss'];
+const PREMIUM_INTERACTIVE_THEMES = ['cake-celebration', 'balloon-party', 'confetti-burst', 'rose-petals', 'heart-float', 'cap-toss', 'love-scroll', 'birthday-toast', 'floating-balloons'];
 
 export default function CardRenderer({ card, linkToken }: CardRendererProps) {
   const designConfig = typeof card.template.designConfig === 'string'

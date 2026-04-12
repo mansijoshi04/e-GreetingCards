@@ -599,7 +599,7 @@ export const EnvelopeCard = ({
             <div className="relative w-80 h-56 perspective-2000">
               {/* The Card inside */}
               <motion.div
-                animate={isOpen ? { y: -140, scale: 1.1 } : { y: 0, scale: 0.9 }}
+                animate={isOpen ? { y: -140, z: 50, rotateX: 0, scale: 1.1 } : { y: 0, z: -10, scale: 0.9 }}
                 transition={{ duration: 1, ease: 'backOut' }}
                 className={`absolute inset-x-6 top-6 bottom-6 bg-white shadow-2xl rounded-lg overflow-hidden flex flex-col items-center justify-center text-center border border-stone-100 transition-all duration-300 ${isOpen ? 'z-40' : 'z-10'}`}
               >

@@ -28,12 +28,13 @@ export default function PremiumCardExperience({
   const interactionType = design?.animations?.interactionType;
   const coverImageUrl = COVER_IMAGES[visualTheme] || DEFAULT_COVER;
 
-  const isCake = interactionType === 'blow-candles' || visualTheme === 'cake-celebration';
+  const isCake = interactionType === 'blow-candles' || visualTheme === 'cake-celebration' || visualTheme === 'birthday-toast';
   const isBalloon =
     interactionType === 'pop-balloons' ||
     visualTheme === 'balloon-party' ||
-    visualTheme === 'confetti-burst';
-  const isEnvelope = visualTheme === 'rose-petals' || visualTheme === 'heart-float';
+    visualTheme === 'confetti-burst' ||
+    visualTheme === 'floating-balloons';
+  const isEnvelope = visualTheme === 'rose-petals' || visualTheme === 'heart-float' || visualTheme === 'love-scroll';
 
   // Map app content fields to prototype card props
   const message = content.body || content.headline || '';
