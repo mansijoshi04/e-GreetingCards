@@ -35,6 +35,10 @@
     @apply font-serif;
   }
 
+  .playful {
+    font-family: 'Quicksand', sans-serif;
+  }
+
   .btn-primary {
     @apply inline-block px-7 py-3 bg-stone-900 text-white rounded-2xl font-semibold hover:bg-stone-800 transition-colors duration-200;
   }
