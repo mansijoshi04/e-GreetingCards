@@ -639,8 +639,8 @@ export const TEMPLATES: StaticTemplate[] = [
       },
       layout: {
         backgroundType: 'gradient',
-        backgroundValue: ['#fff0f5', '#ffd6e7'],
-        visualTheme: 'heart-float',
+        backgroundValue: ['#3d0015', '#7b1040'],
+        visualTheme: 'rose-petals',
         containerStyle: 'centered',
         aspectRatio: '16:9',
       },
