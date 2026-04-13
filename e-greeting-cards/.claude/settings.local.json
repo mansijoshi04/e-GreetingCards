@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find app:*)",
+      "Bash(find:*)",
+      "Bash(git add:*)",
+      "Bash(grep:*)",
+      "Bash(npm install:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:www.paddle.com)",
+      "Bash(git -C /mnt/c/Users/mansi/Desktop/Projects/e-GreetingCards/e-greeting-cards remote -v)",
+      "Bash(git:*)"
+    ]
+  }
+}
