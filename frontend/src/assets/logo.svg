@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <!-- Heart body -->
+  <path d="M20 34 C20 34 6 24 6 14.5 C6 9.8 9.8 6 14.5 6 C17.1 6 19.4 7.2 20 8.5 C20.6 7.2 22.9 6 25.5 6 C30.2 6 34 9.8 34 14.5 C34 24 20 34 20 34Z" fill="#f43f5e"/>
+  <!-- Gift ribbon horizontal -->
+  <rect x="8" y="17" width="24" height="2.5" rx="1.25" fill="white" opacity="0.6"/>
+  <!-- Gift ribbon vertical -->
+  <rect x="18.75" y="8" width="2.5" height="24" rx="1.25" fill="white" opacity="0.6"/>
+  <!-- Bow left loop -->
+  <path d="M15 9 C12 7 10 9 11 11 C12 13 16 12 19 10Z" fill="white" opacity="0.8"/>
+  <!-- Bow right loop -->
+  <path d="M25 9 C28 7 30 9 29 11 C28 13 24 12 21 10Z" fill="white" opacity="0.8"/>
+</svg>

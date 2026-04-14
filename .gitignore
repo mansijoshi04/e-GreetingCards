@@ -3,6 +3,7 @@
 .env.staging
 .env.prod
 .env
+# All env files are at the project root — no frontend-specific env files
 
 # Python
 __pycache__/

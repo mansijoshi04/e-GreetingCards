@@ -44,6 +44,8 @@ export interface CardText {
   headline: string;
   body: string;
   signature: string;
+  /** Recipient name — shown as "Dear {to}" inside the card. Optional. */
+  to?: string;
 }
 
 /**
