@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", ".ngrok-free.app", ".ngrok.io"]
 
 # Allow all origins in dev
 CORS_ALLOW_ALL_ORIGINS = True
