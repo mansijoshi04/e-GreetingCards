@@ -1,0 +1,138 @@
+# Staging deployment — VPS port 3040 — staging.giflove.ca
+# Uses .env.staging (gitignored, placed manually on VPS — never written by CI/CD)
+# Run: docker compose -f docker-compose.staging.yml up -d --build
+
+services:
+  db:
+    image: postgres:16-alpine
+    env_file: .env.staging
+    restart: unless-stopped
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+    networks:
+      - giflove_staging
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - giflove_staging
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # MinIO — self-hosted object storage (S3-compatible)
+  # Data persisted in a named volume on the VPS.
+  # Console exposed only to localhost; accessible via SSH tunnel if needed.
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    env_file: .env.staging         # reads MINIO_ROOT_USER + MINIO_ROOT_PASSWORD
+    restart: unless-stopped
+    volumes:
+      - minio_staging_data:/data
+    networks:
+      - giflove_staging
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    env_file: .env.staging
+    entrypoint: >
+      sh -c "
+        mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
+        mc mb --ignore-existing local/$$MINIO_BUCKET_NAME &&
+        mc anonymous set public local/$$MINIO_BUCKET_NAME &&
+        echo 'MinIO bucket ready'
+      "
+    networks:
+      - giflove_staging
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py migrate --settings=giflove.settings.production &&
+             gunicorn giflove.wsgi:application --bind 0.0.0.0:8000 --workers 2"
+    env_file: .env.staging
+    environment:
+      DJANGO_SETTINGS_MODULE: giflove.settings.production
+      POSTGRES_HOST: db
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT_URL: http://minio:9000
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    networks:
+      - giflove_staging
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: celery -A giflove worker --loglevel=info
+    env_file: .env.staging
+    environment:
+      DJANGO_SETTINGS_MODULE: giflove.settings.production
+      POSTGRES_HOST: db
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT_URL: http://minio:9000
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - giflove_staging
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: https://staging.giflove.ca/api
+    restart: unless-stopped
+    networks:
+      - giflove_staging
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "127.0.0.1:3040:80"
+    volumes:
+      - ./nginx/staging.giflove.ca:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    networks:
+      - giflove_staging
+
+volumes:
+  postgres_staging_data:
+  minio_staging_data:
+
+networks:
+  giflove_staging:
+    driver: bridge

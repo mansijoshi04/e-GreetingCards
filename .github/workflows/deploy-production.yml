@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to VPS (production)
+    name: Deploy to VPS (giflove.ca — port 3050)
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +19,14 @@ jobs:
           script: |
             set -e
 
-            cd ~/apps/giflove-production/e-GreetingCards/e-greeting-cards
+            cd ~/apps/giflove-production
 
-            # Discard any local changes and pull latest code
+            # Pull latest code
             git checkout -- .
             git pull origin main
 
-            # Rebuild and restart app container
+            # Rebuild and restart using prod compose + .env.prod
             docker compose -f docker-compose.prod.yml up -d --build
 
-            # Clean up dangling images to save disk space
+            # Clean up dangling images
             docker image prune -f

@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to VPS (staging)
+    name: Deploy to VPS (staging.giflove.ca — port 3040)
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +19,14 @@ jobs:
           script: |
             set -e
 
-            cd ~/apps/giflove-staging/e-greeting-cards
+            cd ~/apps/giflove-staging
 
-            # Discard any local changes and pull latest code
+            # Pull latest code
             git checkout -- .
             git pull origin staging
 
-            # Rebuild and restart app container
-            docker compose -f docker-compose.prod.yml up -d --build
+            # Rebuild and restart using staging compose + .env.staging
+            docker compose -f docker-compose.staging.yml up -d --build
 
-            # Clean up dangling images to save disk space
+            # Clean up dangling images
             docker image prune -f

@@ -1,0 +1,16 @@
+# Development image — installs dependencies only.
+# Source code is mounted via docker-compose volume for hot reload.
+# Does NOT run collectstatic (no credentials available at build time in dev).
+FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8000
+# CMD is provided by docker-compose.yml
