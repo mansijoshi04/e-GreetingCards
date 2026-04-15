@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from giflove.constants import RECIPIENT_LIMITS, PLATFORM_EMAIL_TIERS, SCHEDULING_TIERS
+from giflove.constants import RECIPIENT_LIMITS, PLATFORM_EMAIL_TIERS, SCHEDULING_TIERS, TIER_PRICES_CENTS
 from .models import Card, Recipient
 from .serializers import CardCreateSerializer, CardDetailSerializer
 from .services.link_service import (
@@ -59,8 +59,9 @@ class CardCreateView(APIView):
             link_token=link_token,
             expires_at=expires_at,
             scheduled_at=data.get("scheduled_at"),
-            paddle_transaction_id=data["paddle_transaction_id"],
-            amount_paid_cents=data["amount_paid_cents"],
+            paddle_transaction_id=data.get("paddle_transaction_id", ""),
+            # Derived server-side — never trust client-submitted price
+            amount_paid_cents=TIER_PRICES_CENTS[tier],
         )
 
         Recipient.objects.bulk_create([

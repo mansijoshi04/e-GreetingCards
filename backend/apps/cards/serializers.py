@@ -24,8 +24,9 @@ class CardCreateSerializer(serializers.Serializer):
     recipient_emails = serializers.ListField(
         child=serializers.EmailField(), min_length=1
     )
-    paddle_transaction_id = serializers.CharField(max_length=100)
-    amount_paid_cents = serializers.IntegerField(min_value=0)
+    # Optional — free tier cards have no Paddle transaction
+    paddle_transaction_id = serializers.CharField(max_length=100, required=False, allow_blank=True, default='')
+    # amount_paid_cents is NOT accepted from the client — derived server-side from tier
 
 
 class CardDetailSerializer(serializers.ModelSerializer):
