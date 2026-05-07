@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Loader2, Lock, Sparkles, AlertCircle } from 'lucide-react';
@@ -10,7 +10,7 @@ declare global {
     Paddle?: {
       Environment: { set: (env: string) => void };
       Initialize: (config: { token: string; eventCallback?: (data: PaddleEvent) => void }) => void;
-      Checkout: { open: (config: PaddleCheckoutConfig) => void };
+      Checkout: { open: (config: PaddleCheckoutConfig) => void; close: () => void };
     };
   }
 }
@@ -23,7 +23,7 @@ interface PaddleEvent {
 interface PaddleCheckoutConfig {
   items?: { priceId: string; quantity: number }[];
   customData?: Record<string, string>;
-  settings?: { theme?: string; displayMode?: string; locale?: string };
+  settings?: { theme?: string; displayMode?: string; locale?: string; successUrl?: string };
 }
 
 const PADDLE_PRICE_IDS: Record<Tier, string> = {
@@ -37,6 +37,8 @@ export const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<'loading' | 'ready' | 'processing' | 'creating' | 'error'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
+  // Prevents checkout.closed from navigating away after checkout.completed fires
+  const paymentDone = useRef(false);
 
   const cardData = (() => {
     try {
@@ -115,12 +117,18 @@ export const CheckoutPage: React.FC = () => {
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       customData: { templateSlug: cardData.slug, tier: cardData.tier },
-      settings: { theme: 'light', displayMode: 'overlay' },
+      settings: {
+        theme: 'light',
+        displayMode: 'overlay',
+        successUrl: `${window.location.origin}/confirmation`,
+      },
     });
   };
 
   const handlePaddleEvent = async (event: PaddleEvent) => {
     if (event.name === 'checkout.completed') {
+      paymentDone.current = true;
+      window.Paddle?.Checkout.close();
       setStatus('creating');
       const paddleTransactionId = event.data?.transaction_id;
       try {
@@ -144,39 +152,38 @@ export const CheckoutPage: React.FC = () => {
       }
     }
 
-    if (event.name === 'checkout.closed') {
+    // Paddle fires checkout.closed right after checkout.completed — ignore it
+    // if we've already handled the successful payment.
+    if (event.name === 'checkout.closed' && !paymentDone.current) {
       navigate('/checkout/recipients');
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] flex flex-col items-center justify-center px-4 gap-6">
+    <div className="min-h-screen bg-vellum-base flex flex-col items-center justify-center px-4 gap-6 pt-16">
       {status === 'loading' || status === 'ready' || status === 'processing' ? (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="flex flex-col items-center gap-4 text-center"
         >
-          <div className="w-16 h-16 rounded-2xl bg-rose-100 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-pop-violet/10 border border-pop-violet/30 flex items-center justify-center">
             {status === 'loading' ? (
-              <Loader2 size={28} className="text-rose-500 animate-spin" />
+              <Loader2 size={28} className="text-pop-violet animate-spin" />
             ) : (
-              <Lock size={28} className="text-rose-500" />
+              <Lock size={28} className="text-pop-violet" />
             )}
           </div>
-          <h2
-            className="text-xl font-bold text-stone-800"
-            style={{ fontFamily: 'Quicksand, sans-serif' }}
-          >
-            {status === 'loading' ? 'Loading payment...' : 'Complete your payment'}
+          <h2 className="font-serif text-2xl text-ink-espresso">
+            {status === 'loading' ? 'Loading payment…' : 'Complete your payment'}
           </h2>
-          <p className="text-stone-500 text-sm max-w-xs">
+          <p className="text-ink-espresso/70 text-sm max-w-xs">
             Secure checkout powered by Paddle. Your card will be created instantly after payment.
           </p>
           {status === 'ready' && (
             <button
               onClick={openCheckout}
-              className="text-rose-500 text-sm font-semibold hover:underline"
+              className="text-pop-violet text-sm font-semibold hover:text-pop-rose"
             >
               Click here if checkout didn't open
             </button>
@@ -188,15 +195,12 @@ export const CheckoutPage: React.FC = () => {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center gap-4 text-center"
         >
-          <Sparkles size={32} className="text-rose-400" />
-          <Loader2 size={24} className="text-rose-500 animate-spin" />
-          <p
-            className="text-lg font-semibold text-stone-800"
-            style={{ fontFamily: 'Quicksand, sans-serif' }}
-          >
-            Creating your card...
+          <Sparkles size={32} className="text-pop-rose" />
+          <Loader2 size={24} className="text-pop-violet animate-spin" />
+          <p className="font-serif text-2xl text-ink-espresso">
+            Creating your card…
           </p>
-          <p className="text-stone-500 text-sm">Just a moment!</p>
+          <p className="text-ink-espresso/70 text-sm">Just a moment!</p>
         </motion.div>
       ) : (
         <motion.div
@@ -204,19 +208,16 @@ export const CheckoutPage: React.FC = () => {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center gap-4 text-center max-w-sm"
         >
-          <div className="w-14 h-14 rounded-2xl bg-stone-100 flex items-center justify-center">
-            <AlertCircle size={28} className="text-stone-400" />
+          <div className="w-14 h-14 rounded-2xl bg-vellum-base border border-ink-espresso/15 flex items-center justify-center">
+            <AlertCircle size={28} className="text-ink-espresso/60" />
           </div>
-          <h2
-            className="text-xl font-bold text-stone-800"
-            style={{ fontFamily: 'Quicksand, sans-serif' }}
-          >
+          <h2 className="font-serif text-2xl text-ink-espresso">
             Something went wrong
           </h2>
-          <p className="text-stone-500 text-sm">{errorMsg}</p>
+          <p className="text-ink-espresso/70 text-sm">{errorMsg}</p>
           <button
             onClick={() => navigate('/checkout/recipients')}
-            className="bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-2.5 rounded-full transition-colors text-sm"
+            className="bg-pop-violet hover:bg-pop-rose text-vellum-base font-semibold px-6 py-2.5 rounded-full transition-colors text-sm"
           >
             Go back
           </button>

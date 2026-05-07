@@ -65,8 +65,8 @@ export const TIER_DESCRIPTIONS: Record<string, string> = {
 };
 
 export const TIER_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  free: { bg: 'bg-stone-100', text: 'text-stone-600', border: 'border-stone-200' },
-  essential: { bg: 'bg-sky-100', text: 'text-sky-700', border: 'border-sky-200' },
-  premium: { bg: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200' },
-  bulk: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200' },
+  free: { bg: 'bg-vellum-base', text: 'text-ink-espresso', border: 'border-ink-espresso/30' },
+  essential: { bg: 'bg-pop-rose/10', text: 'text-pop-rose', border: 'border-pop-rose/40' },
+  premium: { bg: 'bg-pop-violet/10', text: 'text-pop-violet', border: 'border-pop-violet/40' },
+  bulk: { bg: 'bg-pop-electric/25', text: 'text-ink-espresso', border: 'border-ink-espresso/30' },
 };

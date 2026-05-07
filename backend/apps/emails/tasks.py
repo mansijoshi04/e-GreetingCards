@@ -20,8 +20,9 @@ def send_card_emails(self, card_id: str):
     except Card.DoesNotExist:
         return  # Card deleted before task ran — nothing to do
 
+    from django.conf import settings
     recipients = card.recipients.filter(email_sent_at__isnull=True)
-    card_url = f"https://giflove.ca/card/{card.link_token}"  # BASE_URL from settings preferred
+    card_url = f"{settings.BASE_URL}/card/{card.link_token}"
 
     for recipient in recipients:
         try:

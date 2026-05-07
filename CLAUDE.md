@@ -288,7 +288,8 @@ git clone <repo> && cd <repo>
 #    Edit it if you want to add real Paddle sandbox credentials.
 
 # 3. Start all services (migrations and MinIO bucket creation run automatically)
-docker compose up
+#    --env-file is required so VITE_* vars reach the frontend container
+docker compose --env-file .env.local up
 
 # Access:
 #   Frontend:     http://localhost:3000

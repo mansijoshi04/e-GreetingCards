@@ -1,6 +1,12 @@
 # Local development — hot reload, no built images, source mounted as volumes.
-# Uses .env.local  (gitignored — copy from .env.example and fill in values)
-# Run: docker compose up
+#
+# REQUIRED: Docker Compose reads .env.local for ${VAR} substitution (VITE_* vars
+# in the frontend service). Always start with:
+#
+#   docker compose --env-file .env.local up
+#
+# Without --env-file, VITE_PADDLE_CLIENT_TOKEN and other frontend vars will be
+# empty and Paddle checkout will fail.
 #
 # Services:
 #   db        → PostgreSQL at localhost:5432
@@ -154,6 +160,15 @@ services:
       VITE_BACKEND_HOST: backend
       # Polling ensures file changes on the Windows NTFS volume are detected
       CHOKIDAR_USEPOLLING: "true"
+      # Frontend-only VITE_ vars — injected via host-level substitution from .env.local.
+      # Backend secrets (DB password, Django key, Paddle API key, etc.) are intentionally
+      # excluded: they come from env_file on the backend/worker services only.
+      VITE_PADDLE_CLIENT_TOKEN: ${VITE_PADDLE_CLIENT_TOKEN}
+      VITE_PADDLE_ENVIRONMENT: ${VITE_PADDLE_ENVIRONMENT}
+      VITE_PADDLE_PRICE_ESSENTIAL: ${VITE_PADDLE_PRICE_ESSENTIAL}
+      VITE_PADDLE_PRICE_PREMIUM: ${VITE_PADDLE_PRICE_PREMIUM}
+      VITE_PADDLE_PRICE_BULK: ${VITE_PADDLE_PRICE_BULK}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
 
 volumes:
   postgres_dev_data:

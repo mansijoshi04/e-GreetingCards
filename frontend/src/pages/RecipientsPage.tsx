@@ -96,19 +96,16 @@ export const RecipientsPage: React.FC = () => {
   const minScheduledAt = new Date(Date.now() + 5 * 60 * 1000).toISOString().slice(0, 16);
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] pb-16">
+    <div className="min-h-screen bg-vellum-base pb-16 pt-16">
       {/* Header */}
-      <div className="bg-white border-b border-stone-100 px-4 py-8 text-center">
+      <div className="bg-vellum-base border-b border-ink-espresso/10 px-4 py-10 text-center">
         <div className="flex justify-center mb-3">
           <TierBadge tier={tier} />
         </div>
-        <h1
-          className="text-2xl font-bold text-stone-800"
-          style={{ fontFamily: 'Quicksand, sans-serif' }}
-        >
+        <h1 className="font-serif text-3xl md:text-4xl text-ink-espresso">
           Who's receiving this?
         </h1>
-        <p className="text-stone-500 text-sm mt-1 max-w-md mx-auto">
+        <p className="text-ink-espresso/70 text-sm mt-2 max-w-md mx-auto">
           {platformSendsEmail
             ? `We'll send the card on your behalf to up to ${maxRecipients} ${maxRecipients === 1 ? 'recipient' : 'recipients'}.`
             : 'You\'ll get a shareable link to send yourself.'}
@@ -117,19 +114,19 @@ export const RecipientsPage: React.FC = () => {
 
       <div className="max-w-xl mx-auto px-4 pt-8 flex flex-col gap-6">
         {/* Sender info */}
-        <div className="bg-white rounded-2xl border border-stone-100 p-5 flex flex-col gap-4">
-          <h2 className="font-semibold text-stone-800 text-sm">From you</h2>
+        <div className="bg-vellum-base rounded-2xl border border-ink-espresso/15 p-5 flex flex-col gap-4">
+          <h2 className="font-semibold text-ink-espresso text-sm">From you</h2>
 
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1">
-              Your name <span className="text-rose-400">*</span>
+            <label className="block text-xs font-medium text-ink-espresso/70 mb-1">
+              Your name <span className="text-pop-rose">*</span>
             </label>
             <input
               type="text"
               value={senderName}
               onChange={e => setSenderName(e.target.value)}
-              className={`w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-rose-200 transition-all ${
-                errors.senderName ? 'border-red-300 bg-red-50' : 'border-stone-200'
+              className={`w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-pop-violet/30 transition-all ${
+                errors.senderName ? 'border-red-400 bg-red-50' : 'border-ink-espresso/20'
               }`}
               placeholder="e.g. Sarah"
             />
@@ -142,16 +139,16 @@ export const RecipientsPage: React.FC = () => {
 
           {platformSendsEmail && (
             <div>
-              <label className="block text-xs font-medium text-stone-500 mb-1">
-                Your email <span className="text-rose-400">*</span>
-                <span className="text-stone-400 ml-1">(for delivery confirmation)</span>
+              <label className="block text-xs font-medium text-ink-espresso/70 mb-1">
+                Your email <span className="text-pop-rose">*</span>
+                <span className="text-ink-espresso/50 ml-1">(for delivery confirmation)</span>
               </label>
               <input
                 type="email"
                 value={senderEmail}
                 onChange={e => setSenderEmail(e.target.value)}
-                className={`w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-rose-200 transition-all ${
-                  errors.senderEmail ? 'border-red-300 bg-red-50' : 'border-stone-200'
+                className={`w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-pop-violet/30 transition-all ${
+                  errors.senderEmail ? 'border-red-400 bg-red-50' : 'border-ink-espresso/20'
                 }`}
                 placeholder="you@example.com"
               />
@@ -165,12 +162,12 @@ export const RecipientsPage: React.FC = () => {
         </div>
 
         {/* Recipients */}
-        <div className="bg-white rounded-2xl border border-stone-100 p-5 flex flex-col gap-4">
+        <div className="bg-vellum-base rounded-2xl border border-ink-espresso/15 p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-stone-800 text-sm">
+            <h2 className="font-semibold text-ink-espresso text-sm">
               Recipients
               {platformSendsEmail && (
-                <span className="text-stone-400 font-normal ml-1">({maxRecipients} max)</span>
+                <span className="text-ink-espresso/50 font-normal ml-1">({maxRecipients} max)</span>
               )}
             </h2>
             {errors.recipients && (
@@ -181,7 +178,7 @@ export const RecipientsPage: React.FC = () => {
           </div>
 
           {!platformSendsEmail && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-700">
+            <div className="bg-pop-electric/20 border border-ink-espresso/20 rounded-xl p-3 text-xs text-ink-espresso/80">
               Free tier — you'll receive a shareable link to send yourself. No email delivery.
             </div>
           )}
@@ -200,8 +197,8 @@ export const RecipientsPage: React.FC = () => {
                     value={rec.email}
                     onChange={e => updateRecipient(i, 'email', e.target.value)}
                     disabled={!platformSendsEmail && i > 0}
-                    className={`w-full px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-rose-200 transition-all ${
-                      errors[`recipient_${i}`] ? 'border-red-300' : 'border-stone-200'
+                    className={`w-full px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-pop-violet/30 transition-all ${
+                      errors[`recipient_${i}`] ? 'border-red-400' : 'border-ink-espresso/20'
                     } disabled:opacity-40 disabled:cursor-not-allowed`}
                     placeholder="recipient@example.com"
                   />
@@ -212,7 +209,7 @@ export const RecipientsPage: React.FC = () => {
                 {recipients.length > 1 && (
                   <button
                     onClick={() => removeRecipient(i)}
-                    className="mt-1 p-2 rounded-lg text-stone-400 hover:text-red-400 hover:bg-red-50 transition-colors"
+                    className="mt-1 p-2 rounded-lg text-ink-espresso/50 hover:text-red-500 hover:bg-red-50 transition-colors"
                   >
                     <Trash2 size={15} />
                   </button>
@@ -224,7 +221,7 @@ export const RecipientsPage: React.FC = () => {
           {platformSendsEmail && recipients.length < maxRecipients && (
             <button
               onClick={addRecipient}
-              className="flex items-center gap-1.5 text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-semibold text-pop-rose hover:text-pop-violet transition-colors"
             >
               <Plus size={14} /> Add another recipient
             </button>
@@ -233,16 +230,16 @@ export const RecipientsPage: React.FC = () => {
 
         {/* Scheduling */}
         {canSchedule && (
-          <div className="bg-white rounded-2xl border border-stone-100 p-5 flex flex-col gap-3">
+          <div className="bg-vellum-base rounded-2xl border border-ink-espresso/15 p-5 flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <Clock size={16} className="text-rose-400" />
-              <h2 className="font-semibold text-stone-800 text-sm">When to send</h2>
+              <Clock size={16} className="text-pop-rose" />
+              <h2 className="font-semibold text-ink-espresso text-sm">When to send</h2>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => setScheduledAt('')}
                 className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all ${
-                  !scheduledAt ? 'bg-rose-500 text-white border-rose-500' : 'border-stone-200 text-stone-600 hover:border-rose-200'
+                  !scheduledAt ? 'bg-pop-violet text-vellum-base border-pop-violet' : 'border-ink-espresso/20 text-ink-espresso/70 hover:border-pop-violet'
                 }`}
               >
                 Send now
@@ -250,7 +247,7 @@ export const RecipientsPage: React.FC = () => {
               <button
                 onClick={() => setScheduledAt(minScheduledAt)}
                 className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all ${
-                  scheduledAt ? 'bg-rose-500 text-white border-rose-500' : 'border-stone-200 text-stone-600 hover:border-rose-200'
+                  scheduledAt ? 'bg-pop-violet text-vellum-base border-pop-violet' : 'border-ink-espresso/20 text-ink-espresso/70 hover:border-pop-violet'
                 }`}
               >
                 Schedule
@@ -263,7 +260,7 @@ export const RecipientsPage: React.FC = () => {
                   value={scheduledAt}
                   min={minScheduledAt}
                   onChange={e => setScheduledAt(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-200 transition-all"
+                  className="w-full px-3 py-2 rounded-xl border border-ink-espresso/20 text-sm focus:outline-none focus:ring-2 focus:ring-pop-violet/30 transition-all"
                 />
               </motion.div>
             )}
@@ -274,8 +271,7 @@ export const RecipientsPage: React.FC = () => {
         <motion.button
           onClick={handleContinue}
           whileTap={{ scale: 0.97 }}
-          className="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-2xl text-base transition-colors shadow-md flex items-center justify-center gap-2"
-          style={{ fontFamily: 'Quicksand, sans-serif' }}
+          className="w-full bg-pop-violet hover:bg-pop-rose text-vellum-base font-semibold py-4 rounded-2xl text-base transition-colors flex items-center justify-center gap-2"
         >
           {tier === 'free' ? 'Create My Card' : `Continue to Payment — ${TIER_PRICES_DISPLAY[tier]}`}
           <ChevronRight size={18} />

@@ -35,10 +35,10 @@ export const CardViewerPage: React.FC = () => {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center">
+      <div className="min-h-screen bg-vellum-base flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 size={32} className="text-rose-400 animate-spin" />
-          <p className="text-stone-500 text-sm">Opening your card...</p>
+          <Loader2 size={32} className="text-pop-violet animate-spin" />
+          <p className="text-ink-espresso/70 text-sm">Opening your card…</p>
         </div>
       </div>
     );
@@ -46,27 +46,24 @@ export const CardViewerPage: React.FC = () => {
 
   if (status === 'expired') {
     return (
-      <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-vellum-base flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-sm"
         >
-          <div className="w-16 h-16 rounded-2xl bg-stone-100 flex items-center justify-center mx-auto mb-4">
-            <Clock size={32} className="text-stone-400" />
+          <div className="w-16 h-16 rounded-2xl bg-vellum-base border border-ink-espresso/15 flex items-center justify-center mx-auto mb-4">
+            <Clock size={32} className="text-ink-espresso/60" />
           </div>
-          <h1
-            className="text-2xl font-bold text-stone-800 mb-2"
-            style={{ fontFamily: 'Quicksand, sans-serif' }}
-          >
+          <h1 className="font-serif text-3xl text-ink-espresso mb-2">
             This card has expired
           </h1>
-          <p className="text-stone-500 text-sm mb-6">
+          <p className="text-ink-espresso/70 text-sm mb-6">
             GifLove cards are designed to feel special — they expire after a set time so they feel like a real occasion, not a forever link.
           </p>
           <Link
             to="/browse"
-            className="inline-block bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-2.5 rounded-full transition-colors text-sm"
+            className="inline-block bg-pop-violet hover:bg-pop-rose text-vellum-base font-semibold px-6 py-2.5 rounded-full transition-colors text-sm"
           >
             Send your own card →
           </Link>
@@ -77,13 +74,13 @@ export const CardViewerPage: React.FC = () => {
 
   if (status === 'error' || !card) {
     return (
-      <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-vellum-base flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-stone-100 flex items-center justify-center mx-auto mb-4">
-            <AlertCircle size={28} className="text-stone-400" />
+          <div className="w-14 h-14 rounded-2xl bg-vellum-base border border-ink-espresso/15 flex items-center justify-center mx-auto mb-4">
+            <AlertCircle size={28} className="text-ink-espresso/60" />
           </div>
-          <p className="text-stone-600 font-medium">Card not found</p>
-          <Link to="/" className="mt-4 block text-rose-500 text-sm font-semibold hover:underline">Back to home</Link>
+          <p className="text-ink-espresso font-medium">Card not found</p>
+          <Link to="/" className="mt-4 block text-pop-violet text-sm font-semibold hover:text-pop-rose">Back to home</Link>
         </div>
       </div>
     );
@@ -92,8 +89,8 @@ export const CardViewerPage: React.FC = () => {
   const template = getTemplate(card.templateSlug);
   if (!template) {
     return (
-      <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center">
-        <p className="text-stone-500 text-sm">Unknown card template.</p>
+      <div className="min-h-screen bg-vellum-base flex items-center justify-center">
+        <p className="text-ink-espresso/70 text-sm">Unknown card template.</p>
       </div>
     );
   }
@@ -105,7 +102,7 @@ export const CardViewerPage: React.FC = () => {
     : undefined;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-violet-50 flex flex-col items-center justify-center px-4 py-8 gap-6">
+    <div className="min-h-screen bg-vellum-base flex flex-col items-center justify-center px-4 py-8 gap-6">
       {/* Card */}
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.92 }}
@@ -132,12 +129,12 @@ export const CardViewerPage: React.FC = () => {
         transition={{ delay: 0.5 }}
         className="text-center"
       >
-        <p className="text-stone-500 text-sm mb-3">
+        <p className="text-ink-espresso/70 text-sm mb-3">
           Want to send a card like this?
         </p>
         <Link
           to="/browse"
-          className="inline-block bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-2.5 rounded-full transition-colors text-sm shadow-md"
+          className="inline-block bg-pop-violet hover:bg-pop-rose text-vellum-base font-semibold px-6 py-2.5 rounded-full transition-colors text-sm"
         >
           Create your own on GifLove →
         </Link>
